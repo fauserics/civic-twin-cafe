@@ -3,161 +3,139 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
-import base64
-from PIL import Image
+import base64, textwrap
 
-# -----------------------------------------------------------------------------
-# CONFIGURACIÓN BÁSICA ---------------------------------------------------------
-# -----------------------------------------------------------------------------
-PRIMARY   = "#1F4E79"   # Azul corporativo
-BG_MAIN   = "#FFFFFF"
-BG_CARD   = "#F2F6FA"
+# ──────────────────────────────────────────────
+# CONFIG BÁSICA & PALETA
+# ──────────────────────────────────────────────
+PRIMARY      = "#103B61"          # Azul más profundo (navy)
+PRIMARY_LIGHT= "#1F4E79"          # Azul medio
+BG_MAIN      = "#FFFFFF"
+BG_CARD      = "#F2F6FA"
 
-st.set_page_config(
-    page_title="Cafetería Quilmes | Civic Twin",
-    layout="wide"
-)
+st.set_page_config(page_title="Cafetería Quilmes | Civic Twin", layout="wide")
 
-# -----------------------------------------------------------------------------
-# INYECCIÓN DE ESTILOS CSS -----------------------------------------------------
-# -----------------------------------------------------------------------------
-css = f"""
+# CSS GLOBAL
+st.markdown(textwrap.dedent(f"""
 <style>
-html, body {{ background-color:{BG_MAIN}; }}
-h1, h2 {{ color:{PRIMARY}; margin:0; }}
+html, body {{ background:{BG_MAIN}; }}
+/* ENCABEZADO FULL WIDTH */
+#main > div:first-child {{ padding-top:0; }}  /* borra espacio default */
+
+/* Tipografías */
+h1,h2,h3,h4,h5,h6 {{ color:{BG_MAIN}; margin:0; }}
+
+/* Tarjetas KPI */
 [data-testid="stMetric"] > div {{
   background:{BG_CARD};
-  border:2px solid {PRIMARY};
+  border:2px solid {PRIMARY_LIGHT};
   border-radius:12px;
-  padding:8px 12px;
+  padding:10px 14px;
 }}
-div[data-baseweb="slider"] [role="slider"] {{ background:{PRIMARY}; color:#fff; }}
-div[data-baseweb="slider"] > div > div {{ background:{PRIMARY}; }}
-.stButton>button {{ background:{PRIMARY}; color:#fff; border-radius:6px; }}
-[data-testid="stSidebarHeader"] h2 {{ color:{PRIMARY}; }}
-</style>
-"""
-st.markdown(css, unsafe_allow_html=True)
 
-# -----------------------------------------------------------------------------
-# ENCABEZADO (NAVBAR) ----------------------------------------------------------
-# -----------------------------------------------------------------------------
+/* Slider colores */
+div[data-baseweb="slider"] [role="slider"] {{ background:{PRIMARY_LIGHT}; }}
+div[data-baseweb="slider"] > div > div {{ background:{PRIMARY_LIGHT}; }}
+
+/* Sidebar */
+[data-testid="stSidebarHeader"] h2 {{ color:{PRIMARY_LIGHT}; }}
+</style>
+"""), unsafe_allow_html=True)
+
+# ──────────────────────────────────────────────
+# HEADER (NAVBAR) - estilo mock‑up
+# ──────────────────────────────────────────────
 BASE_DIR = Path(__file__).parent
 logo_path = BASE_DIR / "civictwin_logo.png"
-
 if logo_path.exists():
-    with open(logo_path, "rb") as f:
-        logo_b64 = base64.b64encode(f.read()).decode()
-    logo_tag = f"<img src='data:image/png;base64,{logo_b64}' style='height:40px;'>"
+    logo_b64 = base64.b64encode(logo_path.read_bytes()).decode()
+    logo_html = f"<img src='data:image/png;base64,{logo_b64}' style='height:48px;'>"
 else:
-    # Placeholder
-    logo_tag = "<div style='height:40px;width:40px;background:#ccc;border-radius:50%;display:flex;align-items:center;justify-content:center;'>?</div>"
+    logo_html = "<div style='height:48px;width:48px;border-radius:50%;background:#ccc;display:flex;align-items:center;justify-content:center;font-weight:600;'>?</div>"
 
 header_html = f"""
-<div style='background:{PRIMARY};padding:12px 24px;border-radius:8px;margin-bottom:24px;'>
-  <div style='display:flex;justify-content:space-between;align-items:center;'>
-    <div style='display:flex;align-items:center;gap:16px;'>
-      {logo_tag}
-      <span style='font-size:30px;font-weight:600;color:#fff;'>Cafetería Quilmes</span>
-      <span style='font-size:22px;font-weight:400;color:#ffffffb3;'>Civic Twin</span>
-    </div>
-    <img src='https://flagcdn.com/w40/ar.png' style='height:28px;border-radius:2px;'>
+<div style='width:100%;background:{PRIMARY_LIGHT};padding:12px 32px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;'>
+  <div style='display:flex;align-items:center;gap:20px;'>
+    {logo_html}
+    <span style='font-size:34px;font-weight:700;color:#fff;'>Cafetería&nbsp;Quilmes</span>
+    <span style='font-size:20px;font-weight:400;color:#ffffffb3;'>Civic&nbsp;Twin</span>
   </div>
+  <img src='https://flagcdn.com/w40/ar.png' style='height:30px;border-radius:2px;'>
 </div>
 """
 
 st.markdown(header_html, unsafe_allow_html=True)
 
-# -----------------------------------------------------------------------------
-# CARGA DE DATOS ---------------------------------------------------------------
-# -----------------------------------------------------------------------------
-CSV_FILE   = BASE_DIR / "CivicTwin_Cafe_Quilmes_Data.csv"
-EXCEL_FILE = BASE_DIR / "CivicTwin_Cafe_Quilmes_Data.xlsx"
-
+# ──────────────────────────────────────────────
+# CARGA DE DATOS
+# ──────────────────────────────────────────────
+CSV = BASE_DIR / "CivicTwin_Cafe_Quilmes_Data.csv"
+XLSX = BASE_DIR / "CivicTwin_Cafe_Quilmes_Data.xlsx"
 @st.cache_data
 def load():
-    if CSV_FILE.exists():
-        return {"tidy": pd.read_csv(CSV_FILE)}
-    elif EXCEL_FILE.exists():
-        return pd.read_excel(EXCEL_FILE, sheet_name=None)
+    if CSV.exists():
+        return {"tidy": pd.read_csv(CSV)}
+    elif XLSX.exists():
+        return pd.read_excel(XLSX, sheet_name=None)
     else:
-        st.error("No se encontró archivo de datos (.csv o .xlsx)")
-        return {}
+        st.stop()
 
 data = load()
-if not data:
-    st.stop()
-
-# Normaliza tablas
 if "tidy" in data:
     tidy = data["tidy"]
-    DS = lambda n: tidy[tidy["dataset"] == n]
-    init_df   = DS("initial_costs")
-    month_df  = DS("monthly_costs")
-    sales_df  = DS("sales_scenarios")
-    assump_df = DS("assumptions")
+    DS   = lambda n: tidy[tidy["dataset"]==n]
+    init_df, month_df, sales_df, assump_df = map(DS,["initial_costs","monthly_costs","sales_scenarios","assumptions"])
 else:
     init_df   = data["initial_costs"]
     month_df  = data["monthly_costs"]
     sales_df  = data["sales_scenarios"]
     assump_df = data["assumptions"]
 
-ASSUMP      = dict(zip(assump_df["variable"], assump_df["value"]))
-WORK_DAYS   = int(ASSUMP.get("working_days_per_month", 26))
-INSUMOS_PCT = float(ASSUMP.get("insumos_percent_of_sales", 0.30))
-INV_TOTAL   = init_df["cost_ars"].sum()
-FIXED_COSTS = month_df["cost_ars"].sum()
+ASSUMP = dict(zip(assump_df["variable"], assump_df["value"]))
+WORK   = int(ASSUMP.get("working_days_per_month",26))
+PCT    = float(ASSUMP.get("insumos_percent_of_sales",0.30))
+INV    = init_df["cost_ars"].sum()
+FIXED  = month_df["cost_ars"].sum()
 
-# -----------------------------------------------------------------------------
-# SIDEBAR – CONTROLES ----------------------------------------------------------
-# -----------------------------------------------------------------------------
+def defval(col):
+    return int(sales_df.loc[sales_df["scenario"]=="Moderado", col].iloc[0])
+
+# ──────────────────────────────────────────────
+# SIDEBAR
+# ──────────────────────────────────────────────
 st.sidebar.header("Escenario")
+clients = st.sidebar.slider("Clientes por día",30,200,defval("clients_per_day"),5,format="%d")
+ticket  = st.sidebar.slider("Ticket promedio (ARS)",3000,8000,defval("ticket_ars"),100,format="%d")
+infl    = st.sidebar.number_input("Inflación anual (%)",0.0,200.0,0.0,1.0,format="%.1f")
 
-get_def = lambda col: int(sales_df.loc[sales_df["scenario"]=="Moderado", col].iloc[0])
-clients_per_day = st.sidebar.slider("Clientes por día", 30, 200, get_def("clients_per_day"), 5, format="%d")
-ticket_avg      = st.sidebar.slider("Ticket promedio (ARS)", 3000, 8000, get_def("ticket_ars"), 100, format="%d")
-inflation       = st.sidebar.number_input("Inflación anual (%)", 0.0, 200.0, 0.0, 1.0, format="%.1f")
+# CÁLCULOS
+sales   = clients*ticket*WORK
+insumos = sales*PCT
+profit  = sales-(insumos+FIXED)
+payback = "∞" if profit<=0 else INV/profit
 
-# -----------------------------------------------------------------------------
-# CÁLCULOS --------------------------------------------------------------------
-# -----------------------------------------------------------------------------
-monthly_sales   = clients_per_day * ticket_avg * WORK_DAYS
-cost_insumos    = monthly_sales * INSUMOS_PCT
-profit_monthly  = monthly_sales - (cost_insumos + FIXED_COSTS)
-payback         = "∞" if profit_monthly <= 0 else INV_TOTAL / profit_monthly
-
-# KPIs
-k1,k2,k3 = st.columns(3)
-k1.metric("Ventas mensuales", f"${monthly_sales:,.0f}")
-k2.metric("Ganancia mensual", f"${profit_monthly:,.0f}")
-k3.metric("Pay-back (meses)", "No rentable" if payback == "∞" else f"{payback:.1f}")
+k1,k2,k3=st.columns(3)
+k1.metric("Ventas mensuales",f"${sales:,.0f}")
+k2.metric("Ganancia mensual",f"${profit:,.0f}")
+k3.metric("Pay-back (meses)","No rentable" if payback=="∞" else f"{payback:.1f}")
 
 st.divider()
 
-# -----------------------------------------------------------------------------
-# GRÁFICO – FLUJO ACUMULADO 24M ----------------------------------------------
-# -----------------------------------------------------------------------------
-months = np.arange(1, 25)
-profits_series = profit_monthly * (1 + inflation/100) ** (months/12)
-cumulative = np.cumsum(profits_series) - INV_TOTAL
-
-fig, ax = plt.subplots()
-ax.plot(months, cumulative, color=PRIMARY)
-ax.axhline(0, color="gray", lw=0.8, ls="--")
-ax.set_xlabel("Mes")
-ax.set_ylabel("Flujo de caja acumulado (ARS)")
-ax.set_title("Proyección 24 meses", color=PRIMARY)
+# GRÁFICO
+months=np.arange(1,25)
+series=profit*(1+infl/100)**(months/12)
+cum=np.cumsum(series)-INV
+fig,ax=plt.subplots()
+ax.plot(months,cum,color=PRIMARY_LIGHT)
+ax.axhline(0,color="grey",lw=0.8,ls="--")
+ax.set_xlabel("Mes"); ax.set_ylabel("Flujo acumulado (ARS)")
+ax.set_title("Proyección 24 meses",color=PRIMARY_LIGHT)
 st.pyplot(fig)
 
-# -----------------------------------------------------------------------------
-# TABLA RESUMEN ---------------------------------------------------------------
-# -----------------------------------------------------------------------------
+# TABLA RESUMEN
 st.subheader("Resumen mensual")
-summary = pd.DataFrame({
-    "Concepto": ["Ventas", "Insumos", "Costos fijos", "Ganancia"],
-    "ARS": [monthly_sales, cost_insumos, FIXED_COSTS, profit_monthly]
-})
-summary["ARS"] = summary["ARS"].apply(lambda x: f"${x:,.0f}")
-st.dataframe(summary, hide_index=True, use_container_width=True)
+summary=pd.DataFrame({"Concepto":["Ventas","Insumos","Costos fijos","Ganancia"],"ARS":[sales,insumos,FIXED,profit]})
+summary["ARS"]=summary["ARS"].apply(lambda x:f"${x:,.0f}")
+st.dataframe(summary,hide_index=True,use_container_width=True)
 
-st.caption("Civic Twin · Cafetería Quilmes · versión 2025‑07‑07")
+st.caption("Civic Twin – Tablero MVP · 07‑Jul‑2025")
