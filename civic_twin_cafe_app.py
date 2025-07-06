@@ -1,161 +1,188 @@
+# civic_twin_cafe_app.py
+# Tablero MVP · Civic Twin · Cafetería Quilmes
+# Versión mock-up 2025-07-07 (b)
+
 import streamlit as st
 import pandas as pd
 import numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
-import base64, textwrap
 
-# ╔══════════════════════════════════════╗
-# ║  CONFIGURACIÓN VISUAL – VERSIÓN 2.0  ║
-# ╚══════════════════════════════════════╝
-PRIMARY         = "#0C365A"   # Navy profundo (mock‑up)
-PRIMARY_LIGHT   = "#1F4E79"   # azul medio slider
-BG_MAIN         = "#FFFFFF"
-BG_CARD         = "#F5F8FC"   # cards / KPI
-BORDER_CARD     = "#0C365A22" # navy 13% opacidad
-FONT_TITLE      = "34px"
-FONT_SUBTITLE   = "20px"
+# ──────────────────────────────────────────────────────────
+# Config de página
+# ──────────────────────────────────────────────────────────
+st.set_page_config(
+    page_title="Cafetería Quilmes | Civic Twin",
+    layout="wide"
+)
 
-st.set_page_config(page_title="Cafetería Quilmes | Civic Twin", layout="wide")
+# ──────────────────────────────────────────────────────────
+# HEADER  (logo SVG, títulos y bandera)
+# ──────────────────────────────────────────────────────────
+SVG_LOGO = """
+<svg width="48" height="48" viewBox="0 0 64 64" fill="none"
+     xmlns="http://www.w3.org/2000/svg"
+     style="vertical-align:middle;margin-right:12px">
+  <circle cx="24" cy="32" r="18"
+          stroke="white" stroke-width="6" fill="none"/>
+  <circle cx="40" cy="32" r="18"
+          stroke="white" stroke-width="6" fill="none"/>
+</svg>
+"""
 
-# -----------------------------------------------------------------------------
-# CSS GLOBAL (mock‑up fidelity)
-# -----------------------------------------------------------------------------
-mock_css = f"""
+HEADER_CSS = """
 <style>
-html, body {{ background:{BG_MAIN}; }}
-/* Remover padding top default */
-#main > div:first-child {{ padding-top:0rem; }}
+/* Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
-/* Encabezado full‑width barra */
-.civic-header {{
-  width:100%;
-  background:{PRIMARY};
-  padding:14px 32px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:24px;
-}}
+/*********  HEADER *********/
+.header-bar{
+    background:linear-gradient(90deg,#14406b 0%,#1F4E79 100%);
+    border-radius:12px;
+    padding:10px 20px;
+    margin-bottom:16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+.header-left{display:flex;align-items:center;gap:14px}
+.proj-title{
+    font-family:'Montserrat',sans-serif;
+    font-size:34px;font-weight:700;
+    color:#ffffff;margin:0
+}
+.proj-sub{
+    font-family:'Montserrat',sans-serif;
+    font-size:20px;font-weight:400;
+    color:#d0e1ff;margin:0 0 0 12px
+}
+.flag{height:34px;border-radius:3px}
 
-.civic-header .titles {{ display:flex; align-items:center; gap:16px; color:#fff; }}
-.civic-header .titles .title  {{ font-size:{FONT_TITLE}; font-weight:600; }}
-.civic-header .titles .subtitle {{ font-size:{FONT_SUBTITLE}; font-weight:400; opacity:.9; }}
+/*********  KPI CARDS *********/
+.stMetric>div{
+    border:2px solid #1F4E79 !important;
+    border-radius:10px;
+    background:#ffffff;
+    box-shadow:0 2px 6px #00000014;
+    padding:12px 8px;
+}
 
-/* KPI cards */
-[data-testid="stMetric"] > div {{
-  background:{BG_CARD};
-  border:1px solid {BORDER_CARD};
-  border-radius:10px;
-  padding:12px 16px;
-}}
-[data-testid="stMetricLabel"] {{ font-size:15px; }}
-[data-testid="stMetricValue"] {{ font-size:28px; }}
+/*********  SLIDERS (todos los navegadores) *********/
+input[type=range]::-webkit-slider-runnable-track{background:#1F4E7933}
+input[type=range]::-webkit-slider-thumb{background:#1F4E79;border:none}
+input[type=range]::-moz-range-track{background:#1F4E7933}
+input[type=range]::-moz-range-thumb{background:#1F4E79;border:none}
 
-/* Slider knob + track */
-div[data-baseweb="slider"] [role="slider"] {{ background:{PRIMARY_LIGHT}; }}
-div[data-baseweb="slider"] > div > div {{ background:{PRIMARY_LIGHT}; }}
-
-/* Sidebar title color */
-[data-testid="stSidebarHeader"] h2 {{ color:{PRIMARY}; }}
+/*********  SIDEBAR *********/
+section[data-testid=stSidebar]{background:#eaf0f7}
 </style>
 """
 
-st.markdown(mock_css, unsafe_allow_html=True)
-
-# -----------------------------------------------------------------------------
-# ENCABEZADO (HTML)
-# -----------------------------------------------------------------------------
-logo_tag = "<div style='width:48px;height:48px;border-radius:50%;background:#ddd;display:flex;align-items:center;justify-content:center;font-weight:700;'>?</div>"
-logo_path = Path(__file__).parent / "civictwin_logo.png"
-if logo_path.exists():
-    logo_b64 = base64.b64encode(logo_path.read_bytes()).decode()
-    logo_tag = f"<img src='data:image/png;base64,{logo_b64}' style='height:48px;'>"
+FLAG_AR = "https://flagcdn.com/w40/ar.png"
 
 header_html = f"""
-<div class='civic-header'>
-  <div class='titles'>
-    {logo_tag}
-    <span class='title'>Cafetería&nbsp;Quilmes</span>
-    <span class='subtitle'>Civic&nbsp;Twin</span>
+{HEADER_CSS}
+<div class='header-bar'>
+  <div class='header-left'>
+    {SVG_LOGO}
+    <h1 class='proj-title'>Cafetería Quilmes</h1>
+    <h2 class='proj-sub'>Civic Twin</h2>
   </div>
-  <img src='https://flagcdn.com/w40/ar.png' style='height:30px;border-radius:2px;'>
+  <img src='{FLAG_AR}' class='flag'>
 </div>
 """
 
 st.markdown(header_html, unsafe_allow_html=True)
 
-# -----------------------------------------------------------------------------
-# CARGA DATOS (igual que antes)
-# -----------------------------------------------------------------------------
-BASE = Path(__file__).parent
-CSV  = BASE / "CivicTwin_Cafe_Quilmes_Data.csv"
-XLSX = BASE / "CivicTwin_Cafe_Quilmes_Data.xlsx"
+# ──────────────────────────────────────────────────────────
+# Lectura de datos (CSV ó Excel)
+# ──────────────────────────────────────────────────────────
+BASE  = Path(__file__).parent
+CSV   = BASE / "CivicTwin_Cafe_Quilmes_Data.csv"
+XLSX  = BASE / "CivicTwin_Cafe_Quilmes_Data.xlsx"
+
 @st.cache_data
-def load():
+def load_data():
     if CSV.exists():
-        return {"tidy": pd.read_csv(CSV)}
-    elif XLSX.exists():
+        tidy = pd.read_csv(CSV)
+        return {"tidy": tidy}
+    if XLSX.exists():
         return pd.read_excel(XLSX, sheet_name=None)
-    st.error("Archivo de datos no encontrado"); return {}
+    st.error("No se encontró ni el CSV ni el Excel de datos.")
+    return {}
 
-data = load();
-if not data: st.stop()
+data = load_data()
+if not data:
+    st.stop()
 
-if "tidy" in data:
-    tidy = data["tidy"]; DS=lambda n: tidy[tidy["dataset"]==n]
-    init_df, month_df, sales_df, assump_df = map(DS,["initial_costs","monthly_costs","sales_scenarios","assumptions"])
-else:
-    init_df   = data["initial_costs"]
-    month_df  = data["monthly_costs"]
-    sales_df  = data["sales_scenarios"]
-    assump_df = data["assumptions"]
+if "tidy" in data:         # archivo largo "tidy"
+    tidy       = data["tidy"]
+    init_df    = tidy[tidy.dataset=="initial_costs"]
+    month_df   = tidy[tidy.dataset=="monthly_costs"]
+    sales_df   = tidy[tidy.dataset=="sales_scenarios"]
+    assump_df  = tidy[tidy.dataset=="assumptions"]
+else:                       # multi-sheet Excel
+    init_df    = data["initial_costs"]
+    month_df   = data["monthly_costs"]
+    sales_df   = data["sales_scenarios"]
+    assump_df  = data["assumptions"]
 
-ASSUMP = dict(zip(assump_df["variable"], assump_df["value"]))
-WORK, PCT = int(ASSUMP.get("working_days_per_month",26)), float(ASSUMP.get("insumos_percent_of_sales",0.30))
-INV, FIXED = init_df["cost_ars"].sum(), month_df["cost_ars"].sum()
+ASSUMP      = dict(zip(assump_df.variable, assump_df.value))
+WORK_DAYS   = int(ASSUMP.get("working_days_per_month", 26))
+INSUM_PCT   = float(ASSUMP.get("insumos_percent_of_sales", 0.30))
+INV_TOTAL   = init_df.cost_ars.sum()
+FIXED_COSTS = month_df.cost_ars.sum()
 
-def defval(col): return int(sales_df.loc[sales_df["scenario"]=="Moderado",col].iloc[0])
-
-# -----------------------------------------------------------------------------
-# SIDEBAR CONTROLES
-# -----------------------------------------------------------------------------
+# ──────────────────────────────────────────────────────────
+# Sidebar – escenario interactivo
+# ──────────────────────────────────────────────────────────
 st.sidebar.header("Escenario")
-clients = st.sidebar.slider("Clientes por día",30,200,defval("clients_per_day"),5)
-ticket  = st.sidebar.slider("Ticket promedio (ARS)",3000,8000,defval("ticket_ars"),100)
-infl    = st.sidebar.number_input("Inflación anual (%)",0.0,200.0,0.0,1.0)
+clients_day = st.sidebar.slider(
+    "Clientes por día", 30, 200,
+    int(sales_df.loc[sales_df.scenario=="Moderado","clients_per_day"]),
+    5
+)
+ticket_avg  = st.sidebar.slider(
+    "Ticket promedio (ARS)", 3000, 8000,
+    int(sales_df.loc[sales_df.scenario=="Moderado","ticket_ars"]),
+    100
+)
+inflacion   = st.sidebar.number_input(
+    "Inflación anual (%)", 0.0, 200.0, 0.0, 1.0
+)
 
-# -----------------------------------------------------------------------------
+# ──────────────────────────────────────────────────────────
+# Cálculos
+# ──────────────────────────────────────────────────────────
+ventas_m   = clients_day * ticket_avg * WORK_DAYS
+costo_ins  = ventas_m * INSUM_PCT
+ganancia_m = ventas_m - (costo_ins + FIXED_COSTS)
+payback    = "∞" if ganancia_m<=0 else INV_TOTAL/ganancia_m
+
+# ──────────────────────────────────────────────────────────
 # KPI
-# -----------------------------------------------------------------------------
-sales   = clients*ticket*WORK
-insumos = sales*PCT
-profit  = sales - (insumos+FIXED)
-payback = "∞" if profit<=0 else INV/profit
-
-k1,k2,k3 = st.columns(3)
-k1.metric("Ventas mensuales",f"${sales:,.0f}")
-k2.metric("Ganancia mensual",f"${profit:,.0f}")
-k3.metric("Pay‑back (meses)","No rentable" if payback=="∞" else f"{payback:.1f}")
+# ──────────────────────────────────────────────────────────
+col1,col2,col3 = st.columns(3)
+col1.metric("Ventas mensuales", f"${ventas_m:,.0f}")
+col2.metric("Ganancia mensual", f"${ganancia_m:,.0f}")
+col3.metric("Pay-back (meses)",
+            "No rentable" if payback=="∞" else f"{payback:.1f}")
 
 st.divider()
 
-# -----------------------------------------------------------------------------
-# GRÁFICO
-# -----------------------------------------------------------------------------
-months = np.arange(1,25)
-series  = profit*(1+infl/100)**(months/12)
-cum     = np.cumsum(series)-INV
-fig,ax  = plt.subplots(); ax.plot(months,cum,color=PRIMARY_LIGHT)
-ax.axhline(0,color="#999",lw=.8,ls="--"); ax.set_xlabel("Mes"); ax.set_ylabel("Flujo acumulado (ARS)")
-ax.set_title("Proyección 24 meses",color=PRIMARY_LIGHT)
+# ──────────────────────────────────────────────────────────
+# Gráfico flujo acumulado 24 m
+# ──────────────────────────────────────────────────────────
+meses  = np.arange(1,25)
+serie  = ganancia_m * (1+inflacion/100)**(meses/12)
+flujo  = np.cumsum(serie) - INV_TOTAL
+
+fig,ax = plt.subplots()
+ax.plot(meses, flujo, color="#1F4E79", lw=2)
+ax.axhline(0, color="#888", lw=.8, ls="--")
+ax.set_xlabel("Mes")
+ax.set_ylabel("Flujo acumulado (ARS)")
+ax.set_title("Proyección 24 meses", color="#14406b", weight="bold")
 st.pyplot(fig)
 
-# -----------------------------------------------------------------------------
-# TABLA RESUMEN
-# -----------------------------------------------------------------------------
-summary = pd.DataFrame({"Concepto":["Ventas","Insumos","Costos fijos","Ganancia"],"ARS":[sales,insumos,FIXED,profit]})
-summary["ARS"] = summary["ARS"].apply(lambda x:f"${x:,.0f}")
-st.subheader("Resumen mensual"); st.dataframe(summary,hide_index=True,use_container_width=True)
-
-st.caption("Civic Twin · Cafetería Quilmes · 07‑Jul‑2025")
+st.caption("Datos fuente: CivicTwin_Cafe_Quilmes_Data · Julio 2025")
