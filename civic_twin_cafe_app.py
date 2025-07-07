@@ -82,8 +82,12 @@ st.markdown("""
 <style>
 /* ① reducir margen bajo el header */
 div.block-container{
-    margin-top:calc(var(--topbar-h) + var(--header-h) + 2px) !important;
+    margin-top:calc(var(--topbar-h) + var(--header-h)) !important; /* ↓ 4 px → 0 px */
+    padding-top:0 !important;          /* quita padding interno extra */
+    height:calc(100vh - var(--topbar-h) - var(--header-h));
+    display:flex; flex-direction:column; overflow:hidden;
 }
+
 
 /* ② KPI más compactos — se conserva el borde azul de 2 px */
 div[data-testid="stMetric"]{
@@ -100,11 +104,6 @@ div[data-testid="stMetric"] > div:nth-child(2) span{
 .graph-row svg,
 .graph-row canvas{
     max-height:220px !important;
-}
-
-/* ④ eliminar p vacío que crea el texto fantasma */
-div.block-container > p:first-child{
-    display:none !important; margin:0 !important;
 }
 </style>
 """, unsafe_allow_html=True)
