@@ -140,26 +140,23 @@ c2.metric("Ganancia mensual", f"${ganancia:,.0f}")
 c3.metric("Pay-back (meses)", "No rentable" if payback=="∞" else f"{payback:.1f}")
 kpi.markdown("</div>", unsafe_allow_html=True)
 
-
-# ────── GRÁFICO (versión compacta + fuente) ──────────────────────────
+# ────── GRÁFICO responsive ───────────────────────────────
 graf = st.container()
 graf.markdown("<div class='graph-row'>", unsafe_allow_html=True)
 
-fig, ax = plt.subplots(figsize=(6, 2.6))        # alto reducido
+# base figure: ancho full, alto ~300 px; CSS lo recortará si hace falta
+fig, ax = plt.subplots(figsize=(6, 3))
 meses  = np.arange(1, 25)
-serie  = ganancia * (1 + inf / 100) ** (meses / 12)
+serie  = ganancia * (1 + inf/100) ** (meses/12)
 flujo  = np.cumsum(serie) - INV
 ax.plot(meses, flujo, color="#1F4E79", lw=2)
 ax.axhline(0, color="#888", lw=.8, ls="--")
-ax.set_xlabel("Mes")
-ax.set_ylabel("Flujo acumulado (ARS)")
-ax.set_title("Proyección 24 meses",
-             color="#14406b", weight="bold", fontsize=18)
+ax.set_xlabel("Mes"); ax.set_ylabel("Flujo acumulado (ARS)")
+ax.set_title("Proyección 24 meses", color="#14406b", weight="bold", fontsize=18)
 ax.ticklabel_format(axis='both', style='plain')
 
 graf.pyplot(fig, use_container_width=True)
 graf.markdown("</div>", unsafe_allow_html=True)
 
-# — pie de página / fuente —
 st.caption("Datos fuente · Julio 2025 – Civic Twin™")
 
