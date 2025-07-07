@@ -70,17 +70,6 @@ st.markdown("""
 div[data-testid="stMetricDelta"]{display:none!important;}
 </style>
 """, unsafe_allow_html=True)
-# Oculta el contenedor delta que muestra "None" en las tarjetas KPI
-st.markdown(
-    """
-    <style>
-    div[data-testid="stMetric"] div[data-testid="stMetricDelta"]{
-        display:none !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 
 FLAG_AR = "https://flagcdn.com/w40/ar.png"
 
