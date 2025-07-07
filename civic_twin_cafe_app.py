@@ -97,7 +97,7 @@ div.block-container > p:first-child{margin-top:0 !important;margin-bottom:0;}
 
 </style>
 """
-FLAG_AR = "https://flagcdn.com/w40/ar.png"
+FLAG_AR = "https://flagcdn.com/w40/us.png"
 
 header_html = (
     HEADER_CSS +
