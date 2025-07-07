@@ -64,6 +64,13 @@ section[data-testid=stSidebar]{ background:#eaf0f7; }
   .block-container img:not(.header-flag){ display:block; margin:0 auto; }
 </style>
 """
+st.markdown("""
+<style>
+/* oculta cualquier delta (None) que se pueda colar */
+div[data-testid="stMetricDelta"]{display:none!important;}
+</style>
+""", unsafe_allow_html=True)
+
 FLAG_AR = "https://flagcdn.com/w40/ar.png"
 
 header_html = (
