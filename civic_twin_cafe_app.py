@@ -118,14 +118,25 @@ c2.metric("Ganancia mensual", f"${ganancia:,.0f}")
 c3.metric("Pay-back (meses)", "No rentable" if payback=="∞" else f"{payback:.1f}")
 st.divider()
 
-# ────── Gráfico flujo acumulado
-mes = np.arange(1,25)
-serie = ganancia * (1 + inf/100) ** (mes / 12)
-flujo = np.cumsum(serie) - INV
-fig, ax = plt.subplots()
-ax.plot(mes, flujo, color="#1F4E79", lw=2)
+# ────── GRÁFICO (versión compacta + fuente) ──────────────────────────
+graf = st.container()
+graf.markdown("<div class='graph-row'>", unsafe_allow_html=True)
+
+fig, ax = plt.subplots(figsize=(6, 2.6))        # alto reducido
+meses  = np.arange(1, 25)
+serie  = ganancia * (1 + inf / 100) ** (meses / 12)
+flujo  = np.cumsum(serie) - INV
+ax.plot(meses, flujo, color="#1F4E79", lw=2)
 ax.axhline(0, color="#888", lw=.8, ls="--")
-ax.set_xlabel("Mes"); ax.set_ylabel("Flujo acumulado (ARS)")
-ax.set_title("Proyección 24 meses", color="#14406b", weight="bold")
-st.pyplot(fig)
-st.caption("Datos fuente · Julio 2025 – Civic Twin")
+ax.set_xlabel("Mes")
+ax.set_ylabel("Flujo acumulado (ARS)")
+ax.set_title("Proyección 24 meses",
+             color="#14406b", weight="bold", fontsize=18)
+ax.ticklabel_format(axis='both', style='plain')
+
+graf.pyplot(fig, use_container_width=True)
+graf.markdown("</div>", unsafe_allow_html=True)
+
+# — pie de página / fuente —
+st.caption("Datos fuente · Julio 2025 – Civic Twin™")
+
