@@ -95,6 +95,26 @@ section[data-testid=stSidebar]{ background:#eaf0f7; }
 /* Borra el margin de párrafos vacíos al inicio */
 div.block-container > p:first-child{margin-top:0 !important;margin-bottom:0;}
 
+/*── COMPACTAR KPI ───────────────────────────────────────*/
+div[data-testid="metric-container"]          {padding:3px 6px!important;
+                                              border:1px solid var(--azul)!important;
+                                              border-radius:8px!important;
+                                              box-shadow:none!important;}
+div[data-testid="metric-container"] > label  {font-size:14px!important;line-height:16px!important}
+div[data-testid="metric-container"] > div:nth-child(2)
+                                             {font-size:19px!important;line-height:21px!important}
+
+/*── ACHICAR ESPACIO ENTRE HEADER Y KPI ──────────────────*/
+div.block-container{margin-top:calc(var(--header-h) + 2px)!important}
+
+/*── LIMPIAR PÁRRAFO VACÍO QUE CREA “nono” ───────────────*/
+div.block-container > p:first-child{margin:0!important;height:0!important;display:none!important}
+
+/*── ALTURA MÁXIMA DEL GRÁFICO (auto-responsive) ─────────*/
+.graph-row svg,
+.graph-row canvas                          {max-height:230px!important}
+
+
 </style>
 """
 FLAG_AR = "https://flagcdn.com/w40/ar.png"
