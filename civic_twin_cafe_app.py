@@ -144,13 +144,14 @@ ventas   = cli * tic * WD
 insumos  = ventas * INS_PCT
 ganancia = ventas - (insumos + FIXED)
 payback  = "∞" if ganancia <= 0 else INV / ganancia
-c1,c2,c3 = st.columns(3)
-c1.metric("Ventas mensuales", f"${ventas:,.0f}")
-c2.metric("Ganancia mensual", f"${ganancia:,.0f}")
-c3.metric("Pay-back (meses)", "No rentable" if payback=="∞" else f"{payback:.1f}")
-st.markdown("<hr style='margin:4px 0;border:none;border-top:1px solid #ddd;'>",
-            unsafe_allow_html=True)
-
+c1, c2, c3 = st.columns(3)
+c1.metric("Ventas mensuales", f"${ventas:,.0f}", delta="")
+c2.metric("Ganancia mensual", f"${ganancia:,.0f}", delta="")
+c3.metric(
+    "Pay-back (meses)",
+    "No rentable" if payback == "∞" else f"{payback:.1f}",
+    delta=""
+)
 
 # ────── Gráfico flujo acumulado
 mes = np.arange(1,25)
