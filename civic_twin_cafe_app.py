@@ -109,19 +109,6 @@ div.block-container{
     display:flex; flex-direction:column; overflow:hidden;
 }
 
-# Oculta el contenedor delta que muestra "None" en las tarjetas KPI
-st.markdown(
-    """
-    <style>
-    div[data-testid="stMetric"] div[data-testid="stMetricDelta"]{
-        display:none !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-
 /* ② KPI más compactos — se conserva el borde azul de 2 px */
 div[data-testid="stMetric"]{
     padding:4px 6px !important;        /* antes 12 px */
