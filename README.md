@@ -1,2 +1,2 @@
 # civic-twin-cafe
-Tablero modelo Civic Twin cefetería en Quilmes
+Tablero modelo Civic Twin cafetería en Quilmes
