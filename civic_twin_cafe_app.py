@@ -4,14 +4,14 @@ import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Cafetería Quilmes | Civic Twin", layout="wide")
 
-# DEBUG: ¿Llega este CSS al navegador?
+# DEBUG CSS → debería verse un borde rojo alrededor de CADA KPI
 st.markdown("""
 <style>
-/* borde rojo visible en cada tarjeta KPI  ─ prueba */
-div[data-testid="metric-container"] {border: 3px solid red !important;}
+div[data-testid="stMetric"] {
+    border: 3px solid red !important;
+}
 </style>
 """, unsafe_allow_html=True)
-
 
 # ────── SVG del logo (dos “círculos abiertos”)
 SVG_LOGO = """
