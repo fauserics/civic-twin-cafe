@@ -171,3 +171,14 @@ ax.set_xlabel("Mes"); ax.set_ylabel("Flujo acumulado (ARS)")
 ax.set_title("Proyección 24 meses", color="#14406b", weight="bold")
 st.pyplot(fig, use_container_width=False)
 st.caption("Datos fuente · Julio 2025 – Civic Twin™")
+
+# Oculta por completo la etiqueta delta (texto y flecha) de TODAS las métricas
+st.markdown(
+    """
+    <style>
+    div[data-testid="stMetricDelta"] { display:none !important; }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
