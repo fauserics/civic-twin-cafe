@@ -70,6 +70,17 @@ st.markdown("""
 div[data-testid="stMetricDelta"]{display:none!important;}
 </style>
 """, unsafe_allow_html=True)
+# Oculta el contenedor delta que muestra "None" en las tarjetas KPI
+st.markdown(
+    """
+    <style>
+    div[data-testid="stMetric"] div[data-testid="stMetricDelta"]{
+        display:none !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 FLAG_AR = "https://flagcdn.com/w40/ar.png"
 
@@ -84,6 +95,20 @@ header_html = (
     "</div>"
 )
 st.markdown(header_html, unsafe_allow_html=True)
+
+# Oculta el contenedor delta que muestra "None" en las tarjetas KPI
+st.markdown(
+    """
+    <style>
+    div[data-testid="stMetric"] div[data-testid="stMetricDelta"]{
+        display:none !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
 # ─── BLOQUE CSS FINAL (se inyecta al final para que siempre gane) ───
 st.markdown("""
 <style>
@@ -94,6 +119,18 @@ div.block-container{
     height:calc(100vh - var(--topbar-h) - var(--header-h));
     display:flex; flex-direction:column; overflow:hidden;
 }
+
+# Oculta el contenedor delta que muestra "None" en las tarjetas KPI
+st.markdown(
+    """
+    <style>
+    div[data-testid="stMetric"] div[data-testid="stMetricDelta"]{
+        display:none !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 
 /* ② KPI más compactos — se conserva el borde azul de 2 px */
@@ -177,6 +214,17 @@ st.markdown(
     """
     <style>
     div[data-testid="stMetricDelta"] { display:none !important; }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+# Oculta el contenedor delta que muestra "None" en las tarjetas KPI
+st.markdown(
+    """
+    <style>
+    div[data-testid="stMetric"] div[data-testid="stMetricDelta"]{
+        display:none !important;
+    }
     </style>
     """,
     unsafe_allow_html=True
