@@ -46,11 +46,11 @@ HEADER_CSS = """
 
 /* Empujar contenido para que no quede oculto */
 section[data-testid="stSidebar"]{ margin-top:calc(var(--topbar-h) + var(--header-h)); }
-div.block-container{ margin-top:calc(var(--topbar-h) + var(--header-h) + 8px); }
+div.block-container{ margin-top:calc(var(--topbar-h) + var(--header-h) + 4px); }
 
 /* KPI cards */
 .stMetric>div{border:2px solid var(--azul)!important; border-radius:10px;
-              background:#fff; box-shadow:0 2px 6px #0003; padding:12px 8px}
+              background:#fff; box-shadow:0 2px 6px #0003; padding:8px 8px}
 
 /* Sliders -> azul */
 input[type=range]::-webkit-slider-runnable-track{background:var(--azul)33}
@@ -60,19 +60,20 @@ input[type=range]::-moz-range-thumb{background:var(--azul); border:none}
 
 /* Sidebar gris azulado */
 section[data-testid=stSidebar]{ background:#eaf0f7; }
+/* Centrar imagen del gráfico */
+  .block-container img:not(.header-flag){ display:block; margin:0 auto; }
 </style>
 """
-
 FLAG_AR = "https://flagcdn.com/w40/ar.png"
 
 header_html = (
     HEADER_CSS +
-    "<div class='header-bar'>"
-      "<div class='header-left'>"
+    "<div class='header-bar'>" 
+      "<div class='header-left'>" 
         f"{SVG_LOGO}<span style='font:600 20px Montserrat,sans-serif;color:#d0e1ff'>Civic Twin™</span>"
-      "</div>"
-      "<span class='header-center'>Cafetería Quilmes</span>"
-      f"<img src='{FLAG_AR}' class='header-flag'>"
+      "</div>" 
+      "<span class='header-center'>Cafetería Quilmes</span>" 
+      f"<img src='{FLAG_AR}' class='header-flag'>" 
     "</div>"
 )
 st.markdown(header_html, unsafe_allow_html=True)
@@ -122,10 +123,10 @@ st.divider()
 mes = np.arange(1,25)
 serie = ganancia * (1 + inf/100) ** (mes / 12)
 flujo = np.cumsum(serie) - INV
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(11, 2.3))
 ax.plot(mes, flujo, color="#1F4E79", lw=2)
 ax.axhline(0, color="#888", lw=.8, ls="--")
 ax.set_xlabel("Mes"); ax.set_ylabel("Flujo acumulado (ARS)")
 ax.set_title("Proyección 24 meses", color="#14406b", weight="bold")
-st.pyplot(fig)
+st.pyplot(fig, use_container_width=False)
 st.caption("Datos fuente · Julio 2025 – Civic Twin™")
