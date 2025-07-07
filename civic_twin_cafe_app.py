@@ -60,9 +60,22 @@ input[type=range]::-moz-range-thumb{background:var(--azul); border:none}
 
 /* Sidebar gris azulado */
 section[data-testid=stSidebar]{ background:#eaf0f7; }
+
+/* MINI-KPI — reduce alto total */
+.stMetric > div {
+    padding: 6px 6px !important;        /* antes 12px */
+    border-width: 1px !important;       /* borde más fino */
+}
+/* Valor numérico */
+div[data-testid="stMetricValue"] > span {
+    font-size: 20px !important;         /* antes ~24–26 */
+}
+/* Etiqueta (“Ventas mensuales”, etc.) */
+div[data-testid="stMetricLabel"] > div {
+    font-size: 14px !important;         /* antes 16 */
+}
 </style>
 """
-
 FLAG_AR = "https://flagcdn.com/w40/ar.png"
 
 header_html = (
@@ -112,11 +125,13 @@ ventas   = cli * tic * WD
 insumos  = ventas * INS_PCT
 ganancia = ventas - (insumos + FIXED)
 payback  = "∞" if ganancia <= 0 else INV / ganancia
-c1,c2,c3 = st.columns(3)
+kpi = st.container(); kpi.markdown("<div class='kpi-row'>", unsafe_allow_html=True)
+c1, c2, c3 = kpi.columns([1, 1, 1], gap="small")   # usa gap chico
 c1.metric("Ventas mensuales", f"${ventas:,.0f}")
 c2.metric("Ganancia mensual", f"${ganancia:,.0f}")
 c3.metric("Pay-back (meses)", "No rentable" if payback=="∞" else f"{payback:.1f}")
-st.divider()
+kpi.markdown("</div>", unsafe_allow_html=True)
+
 
 # ────── GRÁFICO (versión compacta + fuente) ──────────────────────────
 graf = st.container()
