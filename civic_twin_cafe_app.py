@@ -61,19 +61,27 @@ input[type=range]::-moz-range-thumb{background:var(--azul); border:none}
 /* Sidebar gris azulado */
 section[data-testid=stSidebar]{ background:#eaf0f7; }
 
-/* MINI-KPI — reduce alto total */
-.stMetric > div {
-    padding: 6px 6px !important;        /* antes 12px */
-    border-width: 1px !important;       /* borde más fino */
+/********  MINIKPI FORZADO  *****************************************/
+div[data-testid="metric-container"] {
+    /* Contenedor completo: menos padding y borde fino */
+    padding: 2px 4px !important;
+    border: 1px solid var(--azul) !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+    min-width: 0 !important;      /* evita ancho mínimo excesivo */
 }
-/* Valor numérico */
-div[data-testid="stMetricValue"] > span {
-    font-size: 20px !important;         /* antes ~24–26 */
+div[data-testid="metric-container"] > label {
+    /* Etiqueta (Ventas mensuales) */
+    font-size: 14px !important;
+    line-height: 16px !important;
+    margin-bottom: 0 !important;
 }
-/* Etiqueta (“Ventas mensuales”, etc.) */
-div[data-testid="stMetricLabel"] > div {
-    font-size: 14px !important;         /* antes 16 */
+div[data-testid="metric-container"] > div:nth-child(2) {
+    /* Valor numérico */
+    font-size: 20px !important;
+    line-height: 22px !important;
 }
+
 </style>
 """
 FLAG_AR = "https://flagcdn.com/w40/ar.png"
