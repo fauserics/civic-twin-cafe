@@ -97,29 +97,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
-# ─── BLOQUE CSS FINAL (se inyecta al final para que siempre gane) ───
-st.markdown("""
-<style>
-/* ① reducir margen bajo el header */
-div.block-container{
-    margin-top:calc(var(--topbar-h) + var(--header-h)) !important; /* ↓ 4 px → 0 px */
-    padding-top:0 !important;          /* quita padding interno extra */
-    height:calc(100vh - var(--topbar-h) - var(--header-h));
-    display:flex; flex-direction:column; overflow:hidden;
-}
-
-/* ② KPI más compactos — se conserva el borde azul de 2 px */
-div[data-testid="stMetric"]{
-    padding:4px 6px !important;        /* antes 12 px */
-}
-div[data-testid="stMetric"] > label div{
-    font-size:14px !important; line-height:16px !important;
-}
-div[data-testid="stMetric"] > div:nth-child(2) span{
-    font-size:19px !important; line-height:21px !important;
-}
-
 /* ③ limitar altura del gráfico a 220 px */
 .graph-row svg,
 .graph-row canvas{
