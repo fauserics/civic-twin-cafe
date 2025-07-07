@@ -46,7 +46,10 @@ HEADER_CSS = """
 
 /* Empujar contenido para que no quede oculto */
 section[data-testid="stSidebar"]{ margin-top:calc(var(--topbar-h) + var(--header-h)); }
-div.block-container{ margin-top:calc(var(--topbar-h) + var(--header-h) + 8px); }
+div.block-container{
+    margin-top: calc(var(--header-h) + 2px);   /* ↓ de 10 px a 2 px */
+}
+
 
 /* KPI cards */
 .stMetric>div{border:2px solid var(--azul)!important; border-radius:10px;
@@ -88,6 +91,10 @@ section[data-testid=stSidebar]{ background:#eaf0f7; }
       max-height:220px!important;
   }
 }
+
+/* Borra el margin de párrafos vacíos al inicio */
+div.block-container > p:first-child{margin-top:0 !important;margin-bottom:0;}
+
 </style>
 """
 FLAG_AR = "https://flagcdn.com/w40/ar.png"
