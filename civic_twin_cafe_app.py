@@ -99,6 +99,12 @@ st.markdown(
     .graph-row canvas{
         max-height:220px !important;
     }
+    /* reduce el colchón entre el header y la fila KPI */
+div.block-container{
+    margin-top: calc(var(--topbar-h) + var(--header-h) + 2px) !important;  /* era +8px */
+    padding-top: 0 !important;
+}
+
     </style>
     """,
     unsafe_allow_html=True
