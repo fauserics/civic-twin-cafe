@@ -85,25 +85,25 @@ header_html = (
 )
 st.markdown(header_html, unsafe_allow_html=True)
 
-# Oculta el contenedor delta que muestra "None" en las tarjetas KPI
+# ------------- OCULTAR "None" y limitar alto del gráfico -------------
 st.markdown(
     """
     <style>
+    /* Oculta la cajita delta (texto 'None') de TODAS las métricas */
     div[data-testid="stMetric"] div[data-testid="stMetricDelta"]{
         display:none !important;
+    }
+
+    /* Limitar la altura del gráfico a 220 px */
+    .graph-row svg,
+    .graph-row canvas{
+        max-height:220px !important;
     }
     </style>
     """,
     unsafe_allow_html=True
 )
 
-/* limitar altura del gráfico a 220 px */
-.graph-row svg,
-.graph-row canvas{
-    max-height:220px !important;
-}
-</style>
-""", unsafe_allow_html=True)
 
 
 # ────── DATOS
