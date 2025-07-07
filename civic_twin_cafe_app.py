@@ -77,6 +77,38 @@ header_html = (
     "</div>"
 )
 st.markdown(header_html, unsafe_allow_html=True)
+# ─── BLOQUE CSS FINAL (se inyecta al final para que siempre gane) ───
+st.markdown("""
+<style>
+/* ① reducir margen bajo el header */
+div.block-container{
+    margin-top:calc(var(--topbar-h) + var(--header-h) + 2px) !important;
+}
+
+/* ② KPI más compactos — se conserva el borde azul de 2 px */
+div[data-testid="stMetric"]{
+    padding:4px 6px !important;        /* antes 12 px */
+}
+div[data-testid="stMetric"] > label div{
+    font-size:14px !important; line-height:16px !important;
+}
+div[data-testid="stMetric"] > div:nth-child(2) span{
+    font-size:19px !important; line-height:21px !important;
+}
+
+/* ③ limitar altura del gráfico a 220 px */
+.graph-row svg,
+.graph-row canvas{
+    max-height:220px !important;
+}
+
+/* ④ eliminar p vacío que crea el texto fantasma */
+div.block-container > p:first-child{
+    display:none !important; margin:0 !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 
 # ────── DATOS
 BASE = Path(__file__).parent
