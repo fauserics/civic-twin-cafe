@@ -197,6 +197,17 @@ c3.metric(
     delta=""
 )
 
+st.markdown(
+    """
+    <style>
+    div[data-testid="stMetric"] div[data-testid="stMetricDelta"]{
+        display:none !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # ────── Gráfico flujo acumulado
 mes = np.arange(1,25)
 serie = ganancia * (1 + inf/100) ** (mes / 12)
