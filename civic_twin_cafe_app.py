@@ -69,7 +69,7 @@ header_html = (
     HEADER_CSS +
     "<div class='header-bar'>"
       "<div class='header-left'>"
-        f"{SVG_LOGO}<span style='font:600 20px Montserrat,sans-serif;color:#d0e1ff'>Civic Twin</span>"
+        f"{SVG_LOGO}<span style='font:600 20px Montserrat,sans-serif;color:#d0e1ff'>Civic Twin™</span>"
       "</div>"
       "<span class='header-center'>Cafetería Quilmes</span>"
       f"<img src='{FLAG_AR}' class='header-flag'>"
