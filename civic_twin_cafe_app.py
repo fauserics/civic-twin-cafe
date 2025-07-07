@@ -4,6 +4,15 @@ import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Cafetería Quilmes | Civic Twin", layout="wide")
 
+# DEBUG: ¿Llega este CSS al navegador?
+st.markdown("""
+<style>
+/* borde rojo visible en cada tarjeta KPI  ─ prueba */
+div[data-testid="metric-container"] {border: 3px solid red !important;}
+</style>
+""", unsafe_allow_html=True)
+
+
 # ────── SVG del logo (dos “círculos abiertos”)
 SVG_LOGO = """
 <svg width="32" height="32" viewBox="0 0 64 64" fill="none"
