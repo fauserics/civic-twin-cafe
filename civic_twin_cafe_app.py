@@ -17,6 +17,9 @@ SVG_LOGO = """
 # ────── CSS global
 HEADER_CSS = """
 <style>
+/* DEBUG KPI ─ borde rojo para ver si toma el estilo */
+div[data-testid="metric-container"] {border:3px solid red!important;}
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
 :root{
