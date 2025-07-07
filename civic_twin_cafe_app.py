@@ -97,7 +97,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-/* ③ limitar altura del gráfico a 220 px */
+/* limitar altura del gráfico a 220 px */
 .graph-row svg,
 .graph-row canvas{
     max-height:220px !important;
