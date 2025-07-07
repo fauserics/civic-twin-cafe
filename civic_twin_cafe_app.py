@@ -2,25 +2,25 @@ import streamlit as st, pandas as pd, numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
 
-st.set_page_config(page_title="Cafetería Quilmes | Civic Twin", layout="wide")
+st.set_page_config(page_title="Cafetería Quilmes | Civic Twin™", layout="wide")
 
 # MINI-KPI + gráfico responsivo  (sustituye al bloque DEBUG)
 st.markdown("""
 <style>
-/* — Mini-KPI — */
+
+/* MINI-KPI SIN BORDE + PADDING ULTRA-COMPACTO */
 div[data-testid="stMetric"]{
-    padding:4px 6px !important;            /* menos alto */
-    border:1px solid var(--azul) !important;
-    border-radius:8px !important;
+    padding:2px 4px !important;     /* era 4×6 → ahora 2×4 */
+    border:none !important;         /* SIN borde azul */
     box-shadow:none !important;
 }
-div[data-testid="stMetric"] > label div{
-    font-size:14px !important;             /* etiqueta */
-    line-height:16px !important;
+div[data-testid="stMetric"]>label div{
+    font-size:13px!important;       /* etiqueta */
+    line-height:15px!important;
 }
-div[data-testid="stMetric"] > div:nth-child(2) span{
-    font-size:20px !important;             /* valor numérico */
-    line-height:22px !important;
+div[data-testid="stMetric"]>div:nth-child(2) span{
+    font-size:18px!important;       /* valor numérico */
+    line-height:20px!important;
 }
 
 /* — gráfico: máx-alto 230 px (se recorta en pantallas bajas) — */
