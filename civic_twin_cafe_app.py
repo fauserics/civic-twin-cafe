@@ -61,27 +61,33 @@ input[type=range]::-moz-range-thumb{background:var(--azul); border:none}
 /* Sidebar gris azulado */
 section[data-testid=stSidebar]{ background:#eaf0f7; }
 
-/********  MINIKPI FORZADO  *****************************************/
-div[data-testid="metric-container"] {
-    /* Contenedor completo: menos padding y borde fino */
-    padding: 2px 4px !important;
-    border: 1px solid var(--azul) !important;
-    border-radius: 8px !important;
-    box-shadow: none !important;
-    min-width: 0 !important;      /* evita ancho mínimo excesivo */
+/* ⬇️  Mini-KPI y gráfico responsive según alto de pantalla  */
+@media (max-height: 900px) {
+  /* 900 px o menos: achica KPI */
+  div[data-testid="metric-container"]{
+      padding:4px 4px!important;               /* menos padding */
+      border-width:1px!important;
+  }
+  div[data-testid="metric-container"] > label{
+      font-size:14px!important;
+  }
+  div[data-testid="metric-container"] > div:nth-child(2){
+      font-size:20px!important;                /* valor numérico */
+  }
+  /* Gráfico: el contenedor flex se encoge; altura máx 260 px */
+  .graph-row svg, .graph-row canvas{
+      max-height:260px!important;
+  }
 }
-div[data-testid="metric-container"] > label {
-    /* Etiqueta (Ventas mensuales) */
-    font-size: 14px !important;
-    line-height: 16px !important;
-    margin-bottom: 0 !important;
+@media (max-height: 750px) {
+  /* 750 px o menos: aún más compacto */
+  div[data-testid="metric-container"] > div:nth-child(2){
+      font-size:18px!important;
+  }
+  .graph-row svg, .graph-row canvas{
+      max-height:220px!important;
+  }
 }
-div[data-testid="metric-container"] > div:nth-child(2) {
-    /* Valor numérico */
-    font-size: 20px !important;
-    line-height: 22px !important;
-}
-
 </style>
 """
 FLAG_AR = "https://flagcdn.com/w40/ar.png"
