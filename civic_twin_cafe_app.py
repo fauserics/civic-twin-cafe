@@ -188,6 +188,7 @@ ventas   = cli * tic * WD
 insumos  = ventas * INS_PCT
 ganancia = ventas - (insumos + FIXED)
 payback  = "∞" if ganancia <= 0 else INV / ganancia
+# ────── KPI
 c1, c2, c3 = st.columns(3)
 c1.metric("Ventas mensuales", f"${ventas:,.0f}", delta="")
 c2.metric("Ganancia mensual", f"${ganancia:,.0f}", delta="")
@@ -197,16 +198,22 @@ c3.metric(
     delta=""
 )
 
-st.markdown(
+# ─── BLOQUE CSS que oculta el texto "None" del delta ───
+st.markdown(                            # ← abre la llamada
     """
     <style>
-    div[data-testid="stMetric"] div[data-testid="stMetricDelta"]{
-        display:none !important;
+    /* Esconde la cajita delta de TODAS las tarjetas KPI */
+    div[data-testid="stMetric"] div[data-testid="stMetricDelta"] {
+        display: none !important;
     }
     </style>
-    """,
-    unsafe_allow_html=True
-)
+    """,                                # ← triple comillas cierran la cadena
+    unsafe_allow_html=True              # ← cierra la llamada
+)                                       # ← cierra el paréntesis
+
+# ────── Gráfico flujo acumulado
+mes = np.arange(1, 25)
+...
 
 # ────── Gráfico flujo acumulado
 mes = np.arange(1,25)
@@ -229,15 +236,3 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-# Oculta el contenedor delta que muestra "None" en las tarjetas KPI
-st.markdown(
-    """
-    <style>
-    div[data-testid="stMetric"] div[data-testid="stMetricDelta"]{
-        display:none !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
