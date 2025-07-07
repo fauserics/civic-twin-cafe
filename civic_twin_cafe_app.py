@@ -4,14 +4,37 @@ import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Cafetería Quilmes | Civic Twin", layout="wide")
 
-# DEBUG CSS → debería verse un borde rojo alrededor de CADA KPI
+# MINI-KPI + gráfico responsivo  (sustituye al bloque DEBUG)
 st.markdown("""
 <style>
-div[data-testid="stMetric"] {
-    border: 3px solid red !important;
+/* — Mini-KPI — */
+div[data-testid="stMetric"]{
+    padding:4px 6px !important;            /* menos alto */
+    border:1px solid var(--azul) !important;
+    border-radius:8px !important;
+    box-shadow:none !important;
 }
+div[data-testid="stMetric"] > label div{
+    font-size:14px !important;             /* etiqueta */
+    line-height:16px !important;
+}
+div[data-testid="stMetric"] > div:nth-child(2) span{
+    font-size:20px !important;             /* valor numérico */
+    line-height:22px !important;
+}
+
+/* — gráfico: máx-alto 230 px (se recorta en pantallas bajas) — */
+.graph-row svg,
+.graph-row canvas{max-height:230px !important;}
+
+/* — Quita el colchón bajo la barra azul — */
+div.block-container{margin-top:calc(var(--header-h) + 2px) !important;}
+
+/* — Elimina párrafo vacío (evita texto “nono”) — */
+div.block-container > p:first-child{display:none !important;margin:0 !important;}
 </style>
 """, unsafe_allow_html=True)
+
 
 # ────── SVG del logo (dos “círculos abiertos”)
 SVG_LOGO = """
