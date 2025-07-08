@@ -4,35 +4,6 @@ import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Cafetería Quilmes | Civic Twin™", layout="wide")
 
-st.markdown("""
-<style>
-:root{--azul:#1F4E79;}
-.kpi-container { display:flex; gap:16px; margin-bottom:8px; }
-.kpi-card {
-  flex:1;
-  background:#fff;
-  border:2px solid var(--azul);
-  border-radius:10px;
-  padding:8px 12px;
-  box-shadow:0 2px 6px rgba(0,0,0,0.2);
-  text-align:center;
-}
-.kpi-label { 
-  margin:0; 
-  font-size:14px; 
-  font-weight:600; 
-  color:#555;
-}
-.kpi-value {
-  margin:4px 0 0;
-  font-size:22px;
-  font-weight:bold;
-  color:#000;
-}
-</style>
-""", unsafe_allow_html=True)
-
-
 # ────── SVG del logo (dos “círculos abiertos”)
 SVG_LOGO = """
 <svg width="32" height="32" viewBox="0 0 64 64" fill="none"
@@ -153,9 +124,7 @@ def load():
     if CSV.exists():  return {"tidy": pd.read_csv(CSV)}
     if XLSX.exists(): return pd.read_excel(XLSX, sheet_name=None)
     st.error("Dataset no encontrado"); return {}
-d = load()
-if not d:
-    st.stop()
+d = load();  st.stop() if not d else None
 if "tidy" in d:
     t = d["tidy"]
     init, month  = t[t.dataset=="initial_costs"], t[t.dataset=="monthly_costs"]
@@ -177,61 +146,22 @@ tic = st.sidebar.slider("Ticket promedio (ARS)", 3000, 8000,
       int(sales.loc[sales.scenario=="Moderado","ticket_ars"]), 100)
 inf = st.sidebar.number_input("Inflación anual (%)", 0.0, 200.0, 0.0, 1.0)
 
-st.markdown("""
-<style>
-.kpi-row { display:flex; gap:16px; margin-bottom:8px; }
-.kpi-custom {
-  flex:1;
-  border:2px solid var(--azul)!important;
-  border-radius:10px;
-  background:#fff;
-  box-shadow:0 2px 6px #0003;
-  padding:8px 12px;
-  text-align:center;
-}
-.kpi-custom .kpi-label {
-  margin:0;
-  font-size:14px;
-  color:#555;
-  font-weight:600;
-}
-.kpi-custom .kpi-value {
-  margin:4px 0 0;
-  font-size:20px;
-  font-weight:bold;
-  color:#000;
-}
-</style>
-""", unsafe_allow_html=True)
-
-
 # ────── KPI
 ventas   = cli * tic * WD
 insumos  = ventas * INS_PCT
 ganancia = ventas - (insumos + FIXED)
 payback  = "∞" if ganancia <= 0 else INV / ganancia
 
-# ─── KPI — tarjetas HTML personalizadas (sin “None”) ───
-ventas_text = f"${ventas:,.0f}"
-ganancia_text = f"${ganancia:,.0f}"
-payback_text = "No rentable" if payback=="∞" else f"{payback:.1f}"
+NBSP = "\u00A0"          # ← espacio en blanco que Streamlit no cambia
 
-st.markdown(f"""
-<div class="kpi-row">
-  <div class="kpi-custom">
-    <p class="kpi-label">Ventas mensuales</p>
-    <p class="kpi-value">{ventas_text}</p>
-  </div>
-  <div class="kpi-custom">
-    <p class="kpi-label">Ganancia mensual</p>
-    <p class="kpi-value">{ganancia_text}</p>
-  </div>
-  <div class="kpi-custom">
-    <p class="kpi-label">Pay-back (meses)</p>
-    <p class="kpi-value">{payback_text}</p>
-  </div>
-</div>
-""", unsafe_allow_html=True)
+c1, c2, c3 = st.columns(3)
+c1.metric("Ventas mensuales", f"${ventas:,.0f}", delta=NBSP)
+c2.metric("Ganancia mensual", f"${ganancia:,.0f}",  delta=NBSP)
+c3.metric(
+    "Pay-back (meses)",
+    "No rentable" if payback == "∞" else f"{payback:.1f}",
+    delta=NBSP
+)
 
 
 # ────── Gráfico flujo acumulado
@@ -252,11 +182,7 @@ st.markdown(
     <style>
     /* oculta la cajita delta (None) en cualquier tag */
 [data-testid="stMetricDelta"]{display:none !important;}
-/* oculta el primer div (delta) dentro de cada tarjeta KPI */
-div[data-testid="stMetric"] > div:first-child{display:none !important;}
  </style>
     """,
     unsafe_allow_html=True
 )
-
-
