@@ -136,34 +136,27 @@ st.markdown("---")
 # VISTA DASHBOARD
 # ————————————————————————————————————————————————
 if st.session_state.view == "dashboard":
-    # botón de volver al Home
-    st.button("🏠 Inicio", on_click=go_home)
+    # ─── Botón Volver en sidebar ──────────────────
+    if st.sidebar.button("🏠 Inicio"):
+        st.session_state.view = "home"
 
     # tu header azul
     st.markdown(header_html, unsafe_allow_html=True)
     
-    # Botón fijo dentro del header
+   # ─── Reajuste márgenes ───────────────────────
     st.markdown(
         """
         <style>
-        .back-home-btn {
-          position: fixed;
-          top: calc(var(--topbar-h) + 8px);
-          left: 16px;
-          z-index: 200;
-        }
+        /* pega el contenido justo tras el header (sin gap) */
         div.block-container,
         section[data-testid="stSidebar"] {
-          margin-top: calc(var(--topbar-h) + var(--header-h) - 20px) !important;
-          padding-top: 0 !important;
+            margin-top: var(--topbar-h) !important;
+            padding-top: 0 !important;
         }
         </style>
         """,
         unsafe_allow_html=True
     )
-    st.markdown("<div class='back-home-btn'>", unsafe_allow_html=True)
-    st.button("🏠 Inicio", on_click=go_home)
-    st.markdown("</div>", unsafe_allow_html=True)
    
     # ────── DATOS ───────────────────────────────────────
     BASE = Path(__file__).parent
