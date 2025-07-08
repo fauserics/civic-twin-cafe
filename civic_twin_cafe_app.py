@@ -141,6 +141,23 @@ if st.session_state.view == "dashboard":
 
     # tu header azul
     st.markdown(header_html, unsafe_allow_html=True)
+    
+    # ────── AJUSTE DE MÁRGENES ──────────────────────────
+    st.markdown(
+        """
+        <style>
+        /* pegamos el contenido 4px más cerca del header para compensar el botón */
+        div.block-container {
+            margin-top: calc(var(--topbar-h) + var(--header-h) + 2px) !important;
+            padding-top: 0 !important;
+        }
+        section[data-testid="stSidebar"] {
+            margin-top: calc(var(--topbar-h) + var(--header-h) + 2px) !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
     st.markdown("---")
 
     # ────── DATOS ───────────────────────────────────────
