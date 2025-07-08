@@ -181,6 +181,8 @@ st.markdown(
     <style>
     /* oculta la cajita delta (None) en cualquier tag */
 [data-testid="stMetricDelta"]{display:none !important;}
+/* oculta el primer div (delta) dentro de cada tarjeta KPI */
+div[data-testid="stMetric"] > div:first-child{display:none !important;}
  </style>
     """,
     unsafe_allow_html=True
