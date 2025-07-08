@@ -87,13 +87,7 @@ if st.session_state.view == "home":
         <h1 style="font-family:Montserrat, sans-serif; color:#333;">Civic Twin™ Café</h1>
       </div>
     """, unsafe_allow_html=True)
-
-    # — luego tu título, botones y st.stop() —
-    st.title("🚀 Bienvenido a Civic Twin™ Café")
-    …
-    st.stop()
-
-     
+   
     st.title("🚀 Bienvenido a Civic Twin™ Café")
     st.markdown("Seleccioná una opción:")
     col1, col2 = st.columns(2, gap="large")
