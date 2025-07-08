@@ -84,6 +84,29 @@ div[data-testid="stMetricDelta"]{display:none!important;}
 
 FLAG_AR = "https://flagcdn.com/w40/ar.png"
 
+# ─── Variables del header ────────────────────────────
+FLAG_AR = "https://flagcdn.com/w40/ar.png"
+
+SVG_LOGO = """
+<svg width="32" height="32" viewBox="0 0 64 64" fill="none"
+     xmlns="http://www.w3.org/2000/svg"
+     style="vertical-align:middle;margin-right:8px">
+  <circle cx="24" cy="32" r="18" stroke="white" stroke-width="6" fill="none"/>
+  <circle cx="40" cy="32" r="18" stroke="white" stroke-width="6" fill="none"/>
+</svg>
+"""
+
+header_html = (
+    HEADER_CSS +
+    "<div class='header-bar'>"
+      "<div class='header-left'>"
+        f"{SVG_LOGO}<span style='font:600 20px Montserrat,sans-serif;color:#d0e1ff'>Civic Twin™</span>"
+      "</div>"
+      "<span class='header-center'>Cafetería Quilmes</span>"
+      f"<img src='{FLAG_AR}' class='header-flag'>"
+    "</div>"
+)
+
 
 # ─── Después de st.markdown(header_html, unsafe_allow_html=True) ───
 if "view" not in st.session_state:
