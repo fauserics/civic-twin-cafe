@@ -2,6 +2,17 @@ import streamlit as st, pandas as pd, numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
 
+# ─── helpers de navegación ──────────────────────────────
+def go_home():
+    st.session_state.view = "home"
+
+def go_dashboard():
+    st.session_state.view = "dashboard"
+
+def go_contact():
+    st.session_state.view = "contact"
+
+
 st.set_page_config(page_title="Cafetería Quilmes | Civic Twin™", layout="wide")
 
 # ────── SVG del logo (dos “círculos abiertos”)
@@ -91,12 +102,9 @@ if st.session_state.view == "home":
     st.title("🚀 Bienvenido a Civic Twin™ Café")
     st.markdown("Seleccioná una opción:")
     col1, col2 = st.columns(2, gap="large")
-    if col1.button("▶ Ir al Tablero"):
-        st.session_state.view = "dashboard"
-        st.experimental_rerun()
-    if col2.button("✉️ Contacto"):
-        st.session_state.view = "contact"
-        st.experimental_rerun()
+   col1.button("▶ Ir al Tablero", on_click=go_dashboard)
+   col2.button("✉️ Contacto", on_click=go_contact)
+
     st.stop()  # detiene la ejecución para que no siga al tablero ni al form
 
 st.markdown("---")
@@ -104,9 +112,7 @@ st.markdown("---")
 # ─── Página DASHBOARD ──────────────────────────────────────
 if st.session_state.view == "dashboard":
       # — Botón para volver a Home —
-    if st.button("🏠 Inicio"):
-        st.session_state.view = "home"
-        st.experimental_rerun()
+   st.button("🏠 Inicio", on_click=go_home)
 header_html = (
     HEADER_CSS +
     "<div class='header-bar'>" 
@@ -192,6 +198,7 @@ if st.session_state.view == "contact":
         enviado = st.form_submit_button("Enviar")
         if enviado:
             st.success("¡Gracias! Te contactaré pronto.")
+st.button("🏠 Inicio", on_click=go_home)
 
 
 # ─── BLOQUE CSS FINAL (se inyecta al final para que siempre gane) ───
