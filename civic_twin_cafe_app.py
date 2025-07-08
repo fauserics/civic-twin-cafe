@@ -180,8 +180,9 @@ st.caption("Datos fuente · Julio 2025 – Civic Twin™")
 st.markdown(
     """
     <style>
-    div[data-testid="stMetricDelta"] { display:none !important; }
-    </style>
+    /* oculta la cajita delta (None) en cualquier tag */
+[data-testid="stMetricDelta"]{display:none !important;}
+ </style>
     """,
     unsafe_allow_html=True
 )
