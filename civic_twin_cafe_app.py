@@ -109,87 +109,89 @@ if st.session_state.view == "home":
 
 st.markdown("---")
 
-# ─── Página DASHBOARD ──────────────────────────────────────
-if st.session_state.view == "dashboard":
-      # — Botón para volver a Home —
-   st.button("🏠 Inicio", on_click=go_home)
-header_html = (
-    HEADER_CSS +
-    "<div class='header-bar'>" 
-      "<div class='header-left'>" 
-        f"{SVG_LOGO}<span style='font:600 20px Montserrat,sans-serif;color:#d0e1ff'>Civic Twin™</span>"
-      "</div>" 
-      "<span class='header-center'>Cafetería Quilmes</span>" 
-      f"<img src='{FLAG_AR}' class='header-flag'>" 
-    "</div>"
-)
-st.markdown(header_html, unsafe_allow_html=True)
-    # ────── DATOS
-BASE = Path(__file__).parent
-CSV, XLSX = BASE/'CivicTwin_Cafe_Quilmes_Data.csv', BASE/'CivicTwin_Cafe_Quilmes_Data.xlsx'
-@st.cache_data
-def load():
-    if CSV.exists():  return {"tidy": pd.read_csv(CSV)}
-    if XLSX.exists(): return pd.read_excel(XLSX, sheet_name=None)
-    st.error("Dataset no encontrado"); return {}
-d = load()
-if not d:
-    st.stop()
-if "tidy" in d:
-    t = d["tidy"]
-    init, month  = t[t.dataset=="initial_costs"], t[t.dataset=="monthly_costs"]
-    sales, ass   = t[t.dataset=="sales_scenarios"], t[t.dataset=="assumptions"]
-else:
-    init, month, sales, ass = d["initial_costs"], d["monthly_costs"], d["sales_scenarios"], d["assumptions"]
+# ————————————————————————————————————————————————
+# VISTA DASHBOARD
+# ————————————————————————————————————————————————
+elif st.session_state.view == "dashboard":
+    # botón de volver al Home
+    st.button("🏠 Inicio", on_click=go_home)
 
-ASS      = dict(zip(ass.variable, ass.value))
-WD       = int(ASS.get("working_days_per_month", 26))
-INS_PCT  = float(ASS.get("insumos_percent_of_sales", 0.30))
-INV      = init.cost_ars.sum()
-FIXED    = month.cost_ars.sum()
+    # tu header azul
+    st.markdown(header_html, unsafe_allow_html=True)
+    st.markdown("---")
 
-# ────── SIDEBAR controles
-st.sidebar.header("Escenario")
-cli = st.sidebar.slider("Clientes por día", 30, 200,
-      int(sales.loc[sales.scenario=="Moderado","clients_per_day"]), 5)
-tic = st.sidebar.slider("Ticket promedio (ARS)", 3000, 8000,
-      int(sales.loc[sales.scenario=="Moderado","ticket_ars"]), 100)
-inf = st.sidebar.number_input("Inflación anual (%)", 0.0, 200.0, 0.0, 1.0)
+    # ────── DATOS ───────────────────────────────────────
+    BASE = Path(__file__).parent
+    CSV, XLSX = BASE/'CivicTwin_Cafe_Quilmes_Data.csv', BASE/'CivicTwin_Cafe_Quilmes_Data.xlsx'
+    @st.cache_data
+    def load():
+        if CSV.exists():  return {"tidy": pd.read_csv(CSV)}
+        if XLSX.exists(): return pd.read_excel(XLSX, sheet_name=None)
+        st.error("Dataset no encontrado"); return {}
+    d = load()
+    if not d:
+        st.stop()
+    if "tidy" in d:
+        t = d["tidy"]
+        init, month  = t[t.dataset=="initial_costs"], t[t.dataset=="monthly_costs"]
+        sales, ass   = t[t.dataset=="sales_scenarios"], t[t.dataset=="assumptions"]
+    else:
+        init, month, sales, ass = d["initial_costs"], d["monthly_costs"], d["sales_scenarios"], d["assumptions"]
+    ASS      = dict(zip(ass.variable, ass.value))
+    WD       = int(ASS.get("working_days_per_month", 26))
+    INS_PCT  = float(ASS.get("insumos_percent_of_sales", 0.30))
+    INV      = init.cost_ars.sum()
+    FIXED    = month.cost_ars.sum()
 
-# ────── KPI
-ventas   = cli * tic * WD
-insumos  = ventas * INS_PCT
-ganancia = ventas - (insumos + FIXED)
-payback  = "∞" if ganancia <= 0 else INV / ganancia
+    # ────── SIDEBAR controles ────────────────────────────
+    st.sidebar.header("Escenario")
+    cli = st.sidebar.slider("Clientes por día", 30, 200,
+          int(sales.loc[sales.scenario=="Moderado","clients_per_day"]), 5)
+    tic = st.sidebar.slider("Ticket promedio (ARS)", 3000, 8000,
+          int(sales.loc[sales.scenario=="Moderado","ticket_ars"]), 100)
+    inf = st.sidebar.number_input("Inflación anual (%)", 0.0, 200.0, 0.0, 1.0)
 
-NBSP = "\u00A0"          # ← espacio en blanco que Streamlit no cambia
+    # ────── KPI ───────────────────────────────────────────
+    ventas   = cli * tic * WD
+    insumos  = ventas * INS_PCT
+    ganancia = ventas - (insumos + FIXED)
+    payback  = "∞" if ganancia <= 0 else INV / ganancia
+    NBSP = "\u00A0"
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Ventas mensuales", f"${ventas:,.0f}", delta=NBSP)
+    c2.metric("Ganancia mensual", f"${ganancia:,.0f}", delta=NBSP)
+    c3.metric("Pay-back (meses)",
+              "No rentable" if payback == "∞" else f"{payback:.1f}",
+              delta=NBSP)
 
-c1, c2, c3 = st.columns(3)
-c1.metric("Ventas mensuales", f"${ventas:,.0f}", delta=NBSP)
-c2.metric("Ganancia mensual", f"${ganancia:,.0f}",  delta=NBSP)
-c3.metric(
-    "Pay-back (meses)",
-    "No rentable" if payback == "∞" else f"{payback:.1f}",
-    delta=NBSP
-)
+    # ────── Gráfico flujo acumulado ───────────────────────
+    mes   = np.arange(1,25)
+    serie = ganancia * (1 + inf/100) ** (mes / 12)
+    flujo = np.cumsum(serie) - INV
+    fig, ax = plt.subplots(figsize=(11,2.3))
+    ax.plot(mes, flujo, color="#1F4E79", lw=2)
+    ax.axhline(0, color="#888", lw=.8, ls="--")
+    ax.set_xlabel("Mes"); ax.set_ylabel("Flujo acumulado (ARS)")
+    ax.set_title("Proyección 24 meses", color="#14406b", weight="bold")
+    st.pyplot(fig, use_container_width=False)
+    st.caption("Datos fuente · Julio 2025 – Civic Twin™")
 
+    # oculta cualquier delta (None)
+    st.markdown(
+        """
+        <style>
+        [data-testid="stMetricDelta"] { display:none !important; }
+        </style>
+        """, unsafe_allow_html=True
+    )
 
-# ────── Gráfico flujo acumulado
-mes = np.arange(1,25)
-serie = ganancia * (1 + inf/100) ** (mes / 12)
-flujo = np.cumsum(serie) - INV
-fig, ax = plt.subplots(figsize=(11, 2.3))
-ax.plot(mes, flujo, color="#1F4E79", lw=2)
-ax.axhline(0, color="#888", lw=.8, ls="--")
-ax.set_xlabel("Mes"); ax.set_ylabel("Flujo acumulado (ARS)")
-ax.set_title("Proyección 24 meses", color="#14406b", weight="bold")
-st.pyplot(fig, use_container_width=False)
-st.caption("Datos fuente · Julio 2025 – Civic Twin™")
+# ————————————————————————————————————————————————
+# VISTA CONTACTO
+# ————————————————————————————————————————————————
+elif st.session_state.view == "contact":
+    # botón de volver al Home
+    st.button("🏠 Inicio", on_click=go_home)
 
-
-
-# ─── Página CONTACTO ───────────────────────────────────────
-if st.session_state.view == "contact":
     st.title("📬 Contáctame")
     with st.form("contact_form", clear_on_submit=True):
         nombre  = st.text_input("Nombre")
@@ -198,7 +200,6 @@ if st.session_state.view == "contact":
         enviado = st.form_submit_button("Enviar")
         if enviado:
             st.success("¡Gracias! Te contactaré pronto.")
-st.button("🏠 Inicio", on_click=go_home)
 
 
 # ─── BLOQUE CSS FINAL (se inyecta al final para que siempre gane) ───
