@@ -85,6 +85,18 @@ header_html = (
 )
 st.markdown(header_html, unsafe_allow_html=True)
 
+# ─── Navegación interna ───────────────────────────────
+if "view" not in st.session_state:
+    st.session_state.view = "dashboard"
+
+col1, col2 = st.columns(2, gap="small")
+if col1.button("▶ Ver Tablero"):
+    st.session_state.view = "dashboard"
+if col2.button("✉️ Contacto"):
+    st.session_state.view = "contact"
+
+st.markdown("---")
+
 # ─── BLOQUE CSS FINAL (se inyecta al final para que siempre gane) ───
 st.markdown("""
 <style>
