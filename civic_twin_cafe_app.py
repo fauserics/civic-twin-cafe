@@ -140,24 +140,27 @@ if st.session_state.view == "dashboard":
     # tu header azul
     st.markdown(header_html, unsafe_allow_html=True)
     
-  # Ajuste CSS para “atar” el contenido justo abajo
+   # (2) Botón fijo dentro del header
     st.markdown(
         """
         <style>
+        .back-home-btn {
+          position: fixed;
+          top: calc(var(--topbar-h) + 8px);
+          left: 16px;
+          z-index: 200;
+        }
         div.block-container,
         section[data-testid="stSidebar"] {
-            margin-top: calc(var(--topbar-h) - var(--header-h)) !important;
-            padding-top: 0 !important;
+          margin-top: calc(var(--topbar-h) + var(--header-h) - 20px) !important;
+          padding-top: 0 !important;
         }
         </style>
         """,
         unsafe_allow_html=True
     )
-
-    # Botón Inicio en línea
-    st.markdown("<div style='display:flex; justify-content:flex-end; margin:4px 0 8px;'>", unsafe_allow_html=True)
-    if st.button("🏠 Inicio"):
-        st.session_state.view = "home"
+    st.markdown("<div class='back-home-btn'>", unsafe_allow_html=True)
+    st.button("🏠 Inicio", on_click=go_home)
     st.markdown("</div>", unsafe_allow_html=True)
 
    
