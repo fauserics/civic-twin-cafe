@@ -179,7 +179,7 @@ st.caption("Datos fuente · Julio 2025 – Civic Twin™")
 
 
 # ─── Página CONTACTO ───────────────────────────────────────
-elif st.session_state.view == "contact":
+if st.session_state.view == "contact":
     st.title("📬 Contáctame")
     with st.form("contact_form", clear_on_submit=True):
         nombre  = st.text_input("Nombre")
