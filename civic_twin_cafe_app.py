@@ -158,8 +158,7 @@ if st.session_state.view == "dashboard":
         """,
         unsafe_allow_html=True
     )
-    st.markdown("---")
-
+   
     # ────── DATOS ───────────────────────────────────────
     BASE = Path(__file__).parent
     CSV, XLSX = BASE/'CivicTwin_Cafe_Quilmes_Data.csv', BASE/'CivicTwin_Cafe_Quilmes_Data.xlsx'
