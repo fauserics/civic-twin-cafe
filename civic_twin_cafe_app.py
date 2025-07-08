@@ -114,7 +114,6 @@ if st.session_state.view == "home":
     # — HEADER BLANCO para Home —
     st.markdown("""
       <div style="text-align:center; padding:80px 0; background:#ffffff;">
-        <img src="https://flagcdn.com/w40/ar.png" width="64" style="margin-bottom:16px;">
         <h1 style="font-family:Montserrat, sans-serif; color:#333;">Civic Twin™</h1>
         <h2 style="font-family:Montserrat, sans-serif; color:#333;">AI Driven Project Experimentation</h2>
       </div>
