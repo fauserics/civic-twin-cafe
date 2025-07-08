@@ -150,7 +150,7 @@ if st.session_state.view == "dashboard":
         /* Mueve TODO el contenido justo bajo el banner azul (sin gap) */
         div.block-container,
         section[data-testid="stSidebar"] {
-            margin-top: calc(var(--topbar-h) + var(--header-h) + 0px) !important;
+            margin-top: calc(var(--topbar-h) + var(--header-h) - 40px) !important;
             padding-top: 0 !important;
         }
         /* Oculta cualquier línea <hr> (divider) que aparezca */
