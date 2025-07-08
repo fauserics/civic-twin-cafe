@@ -146,22 +146,62 @@ tic = st.sidebar.slider("Ticket promedio (ARS)", 3000, 8000,
       int(sales.loc[sales.scenario=="Moderado","ticket_ars"]), 100)
 inf = st.sidebar.number_input("Inflación anual (%)", 0.0, 200.0, 0.0, 1.0)
 
+st.markdown("""
+<style>
+.kpi-row { display:flex; gap:16px; margin-bottom:8px; }
+.kpi-custom {
+  flex:1;
+  border:2px solid var(--azul)!important;
+  border-radius:10px;
+  background:#fff;
+  box-shadow:0 2px 6px #0003;
+  padding:8px 12px;
+  text-align:center;
+}
+.kpi-custom .kpi-label {
+  margin:0;
+  font-size:14px;
+  color:#555;
+  font-weight:600;
+}
+.kpi-custom .kpi-value {
+  margin:4px 0 0;
+  font-size:20px;
+  font-weight:bold;
+  color:#000;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
 # ────── KPI
 ventas   = cli * tic * WD
 insumos  = ventas * INS_PCT
 ganancia = ventas - (insumos + FIXED)
 payback  = "∞" if ganancia <= 0 else INV / ganancia
 
-NBSP = "\u00A0"          # ← espacio en blanco que Streamlit no cambia
+# ─── KPI — tarjetas HTML personalizadas (sin “None”) ───
+ventas_text = f"${ventas:,.0f}"
+ganancia_text = f"${ganancia:,.0f}"
+payback_text = "No rentable" if payback=="∞" else f"{payback:.1f}"
 
-c1, c2, c3 = st.columns(3)
-c1.metric("Ventas mensuales", f"${ventas:,.0f}", delta=NBSP)
-c2.metric("Ganancia mensual", f"${ganancia:,.0f}",  delta=NBSP)
-c3.metric(
-    "Pay-back (meses)",
-    "No rentable" if payback == "∞" else f"{payback:.1f}",
-    delta=NBSP
-)
+st.markdown(f"""
+<div class="kpi-row">
+  <div class="kpi-custom">
+    <p class="kpi-label">Ventas mensuales</p>
+    <p class="kpi-value">{ventas_text}</p>
+  </div>
+  <div class="kpi-custom">
+    <p class="kpi-label">Ganancia mensual</p>
+    <p class="kpi-value">{ganancia_text}</p>
+  </div>
+  <div class="kpi-custom">
+    <p class="kpi-label">Pay-back (meses)</p>
+    <p class="kpi-value">{payback_text}</p>
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
 
 # ────── Gráfico flujo acumulado
 mes = np.arange(1,25)
