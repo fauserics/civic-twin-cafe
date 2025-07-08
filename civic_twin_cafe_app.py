@@ -149,7 +149,7 @@ if st.session_state.view == "dashboard":
         <style>
          /* Eleva todo el contenido principal 40px hacia arriba */
         div.block-container {
-            margin-top: calc(var(--topbar-h) + var(--header-h) - 40px) !important;
+            margin-top: calc(var(--topbar-h) + var(--header-h) - 80px) !important;
             padding-top: 0 !important;
         }
         /* Mueve TODO el contenido justo bajo el banner azul (sin gap) */
