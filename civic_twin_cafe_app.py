@@ -73,17 +73,6 @@ div[data-testid="stMetricDelta"]{display:none!important;}
 
 FLAG_AR = "https://flagcdn.com/w40/ar.png"
 
-header_html = (
-    HEADER_CSS +
-    "<div class='header-bar'>" 
-      "<div class='header-left'>" 
-        f"{SVG_LOGO}<span style='font:600 20px Montserrat,sans-serif;color:#d0e1ff'>Civic Twin™</span>"
-      "</div>" 
-      "<span class='header-center'>Cafetería Quilmes</span>" 
-      f"<img src='{FLAG_AR}' class='header-flag'>" 
-    "</div>"
-)
-st.markdown(header_html, unsafe_allow_html=True)
 
 # ─── Después de st.markdown(header_html, unsafe_allow_html=True) ───
 if "view" not in st.session_state:
@@ -91,6 +80,20 @@ if "view" not in st.session_state:
 
 # Vista HOME
 if st.session_state.view == "home":
+    # — HEADER BLANCO para Home —
+    st.markdown("""
+      <div style="text-align:center; padding:80px 0; background:#ffffff;">
+        <img src="https://flagcdn.com/w40/ar.png" width="64" style="margin-bottom:16px;">
+        <h1 style="font-family:Montserrat, sans-serif; color:#333;">Civic Twin™ Café</h1>
+      </div>
+    """, unsafe_allow_html=True)
+
+    # — luego tu título, botones y st.stop() —
+    st.title("🚀 Bienvenido a Civic Twin™ Café")
+    …
+    st.stop()
+
+     
     st.title("🚀 Bienvenido a Civic Twin™ Café")
     st.markdown("Seleccioná una opción:")
     col1, col2 = st.columns(2, gap="large")
@@ -106,6 +109,17 @@ st.markdown("---")
 
 # ─── Página DASHBOARD ──────────────────────────────────────
 if st.session_state.view == "dashboard":
+     header_html = (
+    HEADER_CSS +
+    "<div class='header-bar'>" 
+      "<div class='header-left'>" 
+        f"{SVG_LOGO}<span style='font:600 20px Montserrat,sans-serif;color:#d0e1ff'>Civic Twin™</span>"
+      "</div>" 
+      "<span class='header-center'>Cafetería Quilmes</span>" 
+      f"<img src='{FLAG_AR}' class='header-flag'>" 
+    "</div>"
+)
+st.markdown(header_html, unsafe_allow_html=True)
     # AQUÍ pega TODO tu código actual de KPI + gráfico
     # por ejemplo:
     # ventas = cli * tic * WD
