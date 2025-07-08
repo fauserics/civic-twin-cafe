@@ -143,20 +143,26 @@ if st.session_state.view == "dashboard":
     # tu header azul
     st.markdown(header_html, unsafe_allow_html=True)
     
-   # ─── Reajuste márgenes ───────────────────────
+  # Ajuste CSS para “atar” el contenido justo abajo
     st.markdown(
         """
         <style>
-        /* pega el contenido justo tras el header (sin gap) */
         div.block-container,
         section[data-testid="stSidebar"] {
-            margin-top: var(--topbar-h) !important;
+            margin-top: calc(var(--topbar-h) - var(--header-h)) !important;
             padding-top: 0 !important;
         }
         </style>
         """,
         unsafe_allow_html=True
     )
+
+    # Botón Inicio en línea
+    st.markdown("<div style='display:flex; justify-content:flex-end; margin:4px 0 8px;'>", unsafe_allow_html=True)
+    if st.button("🏠 Inicio"):
+        st.session_state.view = "home"
+    st.markdown("</div>", unsafe_allow_html=True)
+
    
     # ────── DATOS ───────────────────────────────────────
     BASE = Path(__file__).parent
