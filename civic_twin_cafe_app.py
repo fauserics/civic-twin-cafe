@@ -153,7 +153,7 @@ def load():
     if CSV.exists():  return {"tidy": pd.read_csv(CSV)}
     if XLSX.exists(): return pd.read_excel(XLSX, sheet_name=None)
     st.error("Dataset no encontrado"); return {}
-d = load();  st.stop() if not d else Hola
+d = load();  st.stop() if not d else "Hola"
 
 if "tidy" in d:
     t = d["tidy"]
