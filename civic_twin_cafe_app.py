@@ -119,7 +119,7 @@ st.markdown(header_html, unsafe_allow_html=True)
     # ventas = cli * tic * WD
     # ... resto de cálculos ...
     # renderiza KPI y gráfico
-    pass
+
 
 # ─── Página CONTACTO ───────────────────────────────────────
 elif st.session_state.view == "contact":
