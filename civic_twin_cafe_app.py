@@ -104,6 +104,22 @@ if st.session_state.view == "home":
 
 # Si llegamos aquí, view es "dashboard" o "contact"
 st.markdown("---")
+# ─── Página TABLERO ───────────────────────────────────────
+if st.session_state.view == "dashboard":
+    # — Aquí va TODO tu código actual de KPI + gráfico —
+    # (sin modificarlo, igual que lo tienes hoy)
+    …
+
+# ─── Página CONTACTO ──────────────────────────────────────
+elif st.session_state.view == "contact":
+    st.title("📬 Contáctame")
+    with st.form("contact_form", clear_on_submit=True):
+        nombre  = st.text_input("Nombre")
+        email   = st.text_input("Email")
+        mensaje = st.text_area("Mensaje")
+        enviado = st.form_submit_button("Enviar")
+        if enviado:
+            st.success("¡Gracias! Te contactaré pronto.")
 
 
 # ─── BLOQUE CSS FINAL (se inyecta al final para que siempre gane) ───
