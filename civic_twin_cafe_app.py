@@ -114,58 +114,7 @@ if st.session_state.view == "dashboard":
     "</div>"
 )
 st.markdown(header_html, unsafe_allow_html=True)
-    # AQUÍ pega TODO tu código actual de KPI + gráfico
-    # por ejemplo:
-    # ventas = cli * tic * WD
-    # ... resto de cálculos ...
-    # renderiza KPI y gráfico
-
-
-# ─── Página CONTACTO ───────────────────────────────────────
-elif st.session_state.view == "contact":
-    st.title("📬 Contáctame")
-    with st.form("contact_form", clear_on_submit=True):
-        nombre  = st.text_input("Nombre")
-        email   = st.text_input("Email")
-        mensaje = st.text_area("Mensaje")
-        enviado = st.form_submit_button("Enviar")
-        if enviado:
-            st.success("¡Gracias! Te contactaré pronto.")
-
-
-# ─── BLOQUE CSS FINAL (se inyecta al final para que siempre gane) ───
-st.markdown("""
-<style>
-/* ① reducir margen bajo el header */
-div.block-container{
-    margin-top:calc(var(--topbar-h) + var(--header-h)) !important; /* ↓ 4 px → 0 px */
-    padding-top:0 !important;          /* quita padding interno extra */
-    height:calc(100vh - var(--topbar-h) - var(--header-h));
-    display:flex; flex-direction:column; overflow:hidden;
-}
-
-
-/* ② KPI más compactos — se conserva el borde azul de 2 px */
-div[data-testid="stMetric"]{
-    padding:4px 6px !important;        /* antes 12 px */
-}
-div[data-testid="stMetric"] > label div{
-    font-size:14px !important; line-height:16px !important;
-}
-div[data-testid="stMetric"] > div:nth-child(2) span{
-    font-size:19px !important; line-height:21px !important;
-}
-
-/* ③ limitar altura del gráfico a 220 px */
-.graph-row svg,
-.graph-row canvas{
-    max-height:220px !important;
-}
-</style>
-""", unsafe_allow_html=True)
-
-
-# ────── DATOS
+    # ────── DATOS
 BASE = Path(__file__).parent
 CSV, XLSX = BASE/'CivicTwin_Cafe_Quilmes_Data.csv', BASE/'CivicTwin_Cafe_Quilmes_Data.xlsx'
 @st.cache_data
@@ -226,6 +175,52 @@ ax.set_xlabel("Mes"); ax.set_ylabel("Flujo acumulado (ARS)")
 ax.set_title("Proyección 24 meses", color="#14406b", weight="bold")
 st.pyplot(fig, use_container_width=False)
 st.caption("Datos fuente · Julio 2025 – Civic Twin™")
+
+
+
+# ─── Página CONTACTO ───────────────────────────────────────
+elif st.session_state.view == "contact":
+    st.title("📬 Contáctame")
+    with st.form("contact_form", clear_on_submit=True):
+        nombre  = st.text_input("Nombre")
+        email   = st.text_input("Email")
+        mensaje = st.text_area("Mensaje")
+        enviado = st.form_submit_button("Enviar")
+        if enviado:
+            st.success("¡Gracias! Te contactaré pronto.")
+
+
+# ─── BLOQUE CSS FINAL (se inyecta al final para que siempre gane) ───
+st.markdown("""
+<style>
+/* ① reducir margen bajo el header */
+div.block-container{
+    margin-top:calc(var(--topbar-h) + var(--header-h)) !important; /* ↓ 4 px → 0 px */
+    padding-top:0 !important;          /* quita padding interno extra */
+    height:calc(100vh - var(--topbar-h) - var(--header-h));
+    display:flex; flex-direction:column; overflow:hidden;
+}
+
+
+/* ② KPI más compactos — se conserva el borde azul de 2 px */
+div[data-testid="stMetric"]{
+    padding:4px 6px !important;        /* antes 12 px */
+}
+div[data-testid="stMetric"] > label div{
+    font-size:14px !important; line-height:16px !important;
+}
+div[data-testid="stMetric"] > div:nth-child(2) span{
+    font-size:19px !important; line-height:21px !important;
+}
+
+/* ③ limitar altura del gráfico a 220 px */
+.graph-row svg,
+.graph-row canvas{
+    max-height:220px !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 
 # Oculta por completo la etiqueta delta (texto y flecha) de TODAS las métricas
 st.markdown(
