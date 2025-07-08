@@ -4,6 +4,35 @@ import matplotlib.pyplot as plt
 
 st.set_page_config(page_title="Cafetería Quilmes | Civic Twin™", layout="wide")
 
+st.markdown("""
+<style>
+:root{--azul:#1F4E79;}
+.kpi-container { display:flex; gap:16px; margin-bottom:8px; }
+.kpi-card {
+  flex:1;
+  background:#fff;
+  border:2px solid var(--azul);
+  border-radius:10px;
+  padding:8px 12px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.2);
+  text-align:center;
+}
+.kpi-label { 
+  margin:0; 
+  font-size:14px; 
+  font-weight:600; 
+  color:#555;
+}
+.kpi-value {
+  margin:4px 0 0;
+  font-size:22px;
+  font-weight:bold;
+  color:#000;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
 # ────── SVG del logo (dos “círculos abiertos”)
 SVG_LOGO = """
 <svg width="32" height="32" viewBox="0 0 64 64" fill="none"
