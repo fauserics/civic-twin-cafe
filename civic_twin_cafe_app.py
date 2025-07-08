@@ -84,9 +84,6 @@ div[data-testid="stMetricDelta"]{display:none!important;}
 
 FLAG_AR = "https://flagcdn.com/w40/ar.png"
 
-# ─── Variables del header ────────────────────────────
-FLAG_AR = "https://flagcdn.com/w40/ar.png"
-
 SVG_LOGO = """
 <svg width="32" height="32" viewBox="0 0 64 64" fill="none"
      xmlns="http://www.w3.org/2000/svg"
