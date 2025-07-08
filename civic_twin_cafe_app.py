@@ -136,10 +136,7 @@ st.markdown("---")
 # VISTA DASHBOARD
 # ————————————————————————————————————————————————
 if st.session_state.view == "dashboard":
-    # ─── Botón Volver en sidebar ──────────────────
-    if st.sidebar.button("🏠 Inicio"):
-        st.session_state.view = "home"
-
+   
     # tu header azul
     st.markdown(header_html, unsafe_allow_html=True)
     
