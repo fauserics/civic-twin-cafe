@@ -153,7 +153,7 @@ def load():
     if CSV.exists():  return {"tidy": pd.read_csv(CSV)}
     if XLSX.exists(): return pd.read_excel(XLSX, sheet_name=None)
     st.error("Dataset no encontrado"); return {}
-d = load();  st.stop() if not d else None
+d = load() if not d:  st.stop()
 if "tidy" in d:
     t = d["tidy"]
     init, month  = t[t.dataset=="initial_costs"], t[t.dataset=="monthly_costs"]
