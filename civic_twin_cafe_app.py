@@ -107,7 +107,7 @@ if st.session_state.view == "dashboard":
     if st.button("🏠 Inicio"):
         st.session_state.view = "home"
         st.experimental_rerun()
-     header_html = (
+header_html = (
     HEADER_CSS +
     "<div class='header-bar'>" 
       "<div class='header-left'>" 
