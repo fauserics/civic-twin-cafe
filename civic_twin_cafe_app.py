@@ -85,32 +85,35 @@ header_html = (
 )
 st.markdown(header_html, unsafe_allow_html=True)
 
-# ─── Navegación de “páginas” ─────────────────────────────
+# ─── Después de st.markdown(header_html, unsafe_allow_html=True) ───
 if "view" not in st.session_state:
-    st.session_state.view = "home"   # empezamos en Home
+    st.session_state.view = "home"
 
 # Vista HOME
 if st.session_state.view == "home":
     st.title("🚀 Bienvenido a Civic Twin™ Café")
     st.markdown("Seleccioná una opción:")
-    c1, c2 = st.columns(2, gap="large")
-    if c1.button("▶ Ir al Tablero"):
+    col1, col2 = st.columns(2, gap="large")
+    if col1.button("▶ Ir al Tablero"):
         st.session_state.view = "dashboard"
         st.experimental_rerun()
-    if c2.button("✉️ Contacto"):
+    if col2.button("✉️ Contacto"):
         st.session_state.view = "contact"
         st.experimental_rerun()
-    st.stop()  # no renderiza nada más hasta que pulses un botón
+    st.stop()  # detiene la ejecución para que no siga al tablero ni al form
 
-# Si llegamos aquí, view es "dashboard" o "contact"
 st.markdown("---")
-# ─── Página TABLERO ───────────────────────────────────────
-if st.session_state.view == "dashboard":
-    # — Aquí va TODO tu código actual de KPI + gráfico —
-    # (sin modificarlo, igual que lo tienes hoy)
-    …
 
-# ─── Página CONTACTO ──────────────────────────────────────
+# ─── Página DASHBOARD ──────────────────────────────────────
+if st.session_state.view == "dashboard":
+    # AQUÍ pega TODO tu código actual de KPI + gráfico
+    # por ejemplo:
+    # ventas = cli * tic * WD
+    # ... resto de cálculos ...
+    # renderiza KPI y gráfico
+    pass
+
+# ─── Página CONTACTO ───────────────────────────────────────
 elif st.session_state.view == "contact":
     st.title("📬 Contáctame")
     with st.form("contact_form", clear_on_submit=True):
