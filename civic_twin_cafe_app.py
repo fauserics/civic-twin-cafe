@@ -227,3 +227,13 @@ div[data-testid="stMetric"] > div:first-child{display:none !important;}
     """,
     unsafe_allow_html=True
 )
+# ——— Inmediatamente después de tu header_html (o al final del archivo) ———
+st.markdown("""
+<style>
+  /* Esconde el primer hijo de cada .stMetric (la cajita delta con “None”) */
+  .stMetric > div:first-child {
+    display: none !important;
+  }
+</style>
+""", unsafe_allow_html=True)
+
