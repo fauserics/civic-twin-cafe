@@ -102,8 +102,8 @@ if st.session_state.view == "home":
     st.title("🚀 Bienvenido a Civic Twin™ Café")
     st.markdown("Seleccioná una opción:")
     col1, col2 = st.columns(2, gap="large")
-   col1.button("▶ Ir al Tablero", on_click=go_dashboard)
-   col2.button("✉️ Contacto", on_click=go_contact)
+    col1.button("▶ Ir al Tablero", on_click=go_dashboard)
+    col2.button("✉️ Contacto", on_click=go_contact)
 
     st.stop()  # detiene la ejecución para que no siga al tablero ni al form
 
