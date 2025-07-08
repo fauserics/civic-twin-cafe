@@ -85,17 +85,26 @@ header_html = (
 )
 st.markdown(header_html, unsafe_allow_html=True)
 
-# ─── Navegación interna ───────────────────────────────
+# ─── Navegación de “páginas” ─────────────────────────────
 if "view" not in st.session_state:
-    st.session_state.view = "dashboard"
+    st.session_state.view = "home"   # empezamos en Home
 
-col1, col2 = st.columns(2, gap="small")
-if col1.button("▶ Ver Tablero"):
-    st.session_state.view = "dashboard"
-if col2.button("✉️ Contacto"):
-    st.session_state.view = "contact"
+# Vista HOME
+if st.session_state.view == "home":
+    st.title("🚀 Bienvenido a Civic Twin™ Café")
+    st.markdown("Seleccioná una opción:")
+    c1, c2 = st.columns(2, gap="large")
+    if c1.button("▶ Ir al Tablero"):
+        st.session_state.view = "dashboard"
+        st.experimental_rerun()
+    if c2.button("✉️ Contacto"):
+        st.session_state.view = "contact"
+        st.experimental_rerun()
+    st.stop()  # no renderiza nada más hasta que pulses un botón
 
+# Si llegamos aquí, view es "dashboard" o "contact"
 st.markdown("---")
+
 
 # ─── BLOQUE CSS FINAL (se inyecta al final para que siempre gane) ───
 st.markdown("""
