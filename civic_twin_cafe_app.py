@@ -103,6 +103,10 @@ st.markdown("---")
 
 # ─── Página DASHBOARD ──────────────────────────────────────
 if st.session_state.view == "dashboard":
+      # — Botón para volver a Home —
+    if st.button("🏠 Inicio"):
+        st.session_state.view = "home"
+        st.experimental_rerun()
      header_html = (
     HEADER_CSS +
     "<div class='header-bar'>" 
