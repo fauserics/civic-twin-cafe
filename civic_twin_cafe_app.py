@@ -115,15 +115,15 @@ if st.session_state.view == "home":
     st.markdown("""
       <div style="text-align:center; padding:80px 0; background:#ffffff;">
         <img src="https://flagcdn.com/w40/ar.png" width="64" style="margin-bottom:16px;">
-        <h1 style="font-family:Montserrat, sans-serif; color:#333;">Civic Twin™ Café</h1>
+        <h1 style="font-family:Montserrat, sans-serif; color:#333;">Civic Twin™</h1>
         <h2 style="font-family:Montserrat, sans-serif; color:#333;">AI Driven Project Experimentation</h2>
       </div>
     """, unsafe_allow_html=True)
    
-    st.title("🚀 Bienvenido a Civic Twin™ Café")
+    st.title("🚀 Bienvenido a Civic Twin™")
     st.markdown("Seleccioná una opción:")
     col1, col2 = st.columns(2, gap="large")
-    col1.button("▶ Ir al Tablero", on_click=go_dashboard)
+    col1.button("▶ Tablero Demo", on_click=go_dashboard)
     col2.button("✉️ Contacto", on_click=go_contact)
 
     st.stop()  # detiene la ejecución para que no siga al tablero ni al form
