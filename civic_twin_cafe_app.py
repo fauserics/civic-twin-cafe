@@ -147,10 +147,15 @@ if st.session_state.view == "dashboard":
     st.markdown(
         """
         <style>
+         /* Eleva todo el contenido principal 40px hacia arriba */
+        div.block-container {
+            margin-top: calc(var(--topbar-h) + var(--header-h) - 40px) !important;
+            padding-top: 0 !important;
+        }
         /* Mueve TODO el contenido justo bajo el banner azul (sin gap) */
         div.block-container,
         section[data-testid="stSidebar"] {
-            margin-top: calc(var(--topbar-h) + var(--header-h) - 40px) !important;
+            margin-top: calc(var(--topbar-h) + var(--header-h) + 0px) !important;
             padding-top: 0 !important;
         }
         /* Oculta cualquier línea <hr> (divider) que aparezca */
