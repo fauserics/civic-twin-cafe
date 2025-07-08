@@ -143,22 +143,23 @@ if st.session_state.view == "dashboard":
     # — Header azul —
     st.markdown(header_html, unsafe_allow_html=True)
 
-    # ────── AJUSTE DE MÁRGENES ──────────────────────────
+     # ────── AJUSTE DE MÁRGENES & OCULTAR RAYA ─────────────
     st.markdown(
         """
         <style>
-        /* pegamos el contenido 4px más cerca del header para compensar el botón */
-        div.block-container {
-            margin-top: calc(var(--topbar-h) + var(--header-h) + 2px) !important;
+        /* Mueve TODO el contenido justo bajo el banner azul (sin gap) */
+        div.block-container,
+        section[data-testid="stSidebar"] {
+            margin-top: calc(var(--topbar-h) + var(--header-h) + 0px) !important;
             padding-top: 0 !important;
         }
-        section[data-testid="stSidebar"] {
-            margin-top: calc(var(--topbar-h) + var(--header-h) + 2px) !important;
-        }
+        /* Oculta cualquier línea <hr> (divider) que aparezca */
+        hr, div[data-testid="stDivider"] { display: none !important; }
         </style>
         """,
         unsafe_allow_html=True
     )
+
    
     # ────── DATOS ───────────────────────────────────────
     BASE = Path(__file__).parent
