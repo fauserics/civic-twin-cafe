@@ -68,7 +68,7 @@ tools = [
 ]
 
 llm = ChatOpenAI(
-    model="gpt-3.5-turbo-0613",  # o "gpt-4-0613"/"gpt-4o-mini"
+    model="gpt-4o-mini",
     temperature=0
 )
 agent = initialize_agent(tools, llm, agent="openai-functions", verbose=False)
