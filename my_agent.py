@@ -67,8 +67,6 @@ tools = [
     Tool(name="send_alert", func=send_alert, description="Envía alertas si algo falla.")
 ]
 
-llm = ChatOpenAI(
-    model="gpt-4o-mini",
-    temperature=0
-)
+llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0, max_tokens=1024)
+
 agent = initialize_agent(tools, llm, agent="openai-functions", verbose=False)
