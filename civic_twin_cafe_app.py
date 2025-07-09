@@ -170,7 +170,7 @@ if st.session_state.view == "building":
         st.error(f"❌ Error al generar el informe: {e}")
         st.session_state.view = "contact"
 
-if st.session_state.view == "dashboard":
+    if st.session_state.view == "dashboard":
    
     # — Botón para volver a Home —
     st.button("🏠 Inicio", on_click=go_home)
