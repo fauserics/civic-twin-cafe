@@ -278,7 +278,7 @@ if st.session_state.view == "contact":
         st.session_state.user_file   = upload
         st.session_state.view        = "building"
         # no st.experimental_rerun() si usas on_click en btns
-        st.experimental_rerun()
+       
 
 
 
