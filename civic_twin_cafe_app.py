@@ -138,29 +138,37 @@ if st.session_state.view == "building":
     st.info("🔄 Generando tu informe… por favor espera.")
 
     # prepara el source para el agent
+    if st.session_state.view == "building":
+    st.info("🔄 Generando tu informe… por favor, espera.")
+
+    # prepara el source
     if st.session_state.user_file:
         uf   = st.session_state.user_file
         tmp  = Path("/tmp")/uf.name
         tmp.write_bytes(uf.read())
-        source = {"type":"local_file","path":str(tmp)}
+        source = {"type":"local_file", "path":str(tmp)}
     else:
         source = None
 
+    # Construye el prompt de invocación
+    build_prompt = f"""
+    Crea un dashboard de Civic Twin™ para Cafetería Quilmes.
+    Descripción del usuario:
+    {st.session_state.user_prompt}
+
+    {'Archivo disponible en ' + source['path'] if source else 'No se subió archivo; busca datos públicos.'}
+    Usa project_name = "cafe-quentinas" para nombrar el servicio.
+    """
     # ejecuta el agent
     try:
-        out = agent.run({
-            "prompt":       st.session_state.user_prompt,
-            "source":       source,
-            "project_name": "cafe-quentinas"
-        })
-        url = out.get("deploy_dashboard") or out.get("dashboard_url")
+        out = agent.run(build_prompt)
+        # Supongamos que tu función deploy_dashboard devuelve directo la URL
+        url = out if isinstance(out, str) else out.get("dashboard_url")
         st.success(f"✅ Informe listo: [Abrir tablero]({url})")
         st.session_state.view = "dashboard"
     except Exception as e:
         st.error(f"❌ Error al generar el informe: {e}")
         st.session_state.view = "contact"
-    
-
 
 if st.session_state.view == "dashboard":
    
