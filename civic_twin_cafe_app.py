@@ -271,17 +271,22 @@ if st.session_state.view == "contact":
     st.title("🚀 Solicita tu nuevo informe")
     with st.form("request_form", clear_on_submit=True):
         prompt = st.text_area(
-            "Describe el informe que necesitas (ej: 'dashboard financiero para mi Cafetería en Quilmes con datos últimos 12 meses')."
+            "Describe el informe que necesitas…",
+            value=st.session_state.get("user_prompt", "")
         )
         upload = st.file_uploader(
-            "Sube CSV/Excel (opcional)", type=["csv","xlsx"]
+            "Sube CSV/Excel (opcional)", 
+            type=["csv", "xlsx"]
         )
         submitted = st.form_submit_button("Generar informe")
+
     if submitted:
+        # Guarda en estado ANTES de cualquier rerun
         st.session_state.user_prompt = prompt
         st.session_state.user_file   = upload
         st.session_state.view        = "building"
-        # no st.experimental_rerun() si usas on_click en btns
+        # NO st.experimental_rerun()
+
        
 
 
