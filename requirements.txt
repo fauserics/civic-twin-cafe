@@ -6,6 +6,7 @@ openpyxl
 
 # Para el Agent AI
 langchain>=0.0.280
+langchain-community
 openai
 jinja2
 requests
