@@ -12,6 +12,8 @@ def go_dashboard():
 def go_contact():
     st.session_state.view = "contact"
 
+from my_agent import agent
+from pathlib import Path
 
 st.set_page_config(page_title="Cafetería Quilmes | Civic Twin™", layout="wide")
 
@@ -132,6 +134,34 @@ st.markdown("---")
 # ————————————————————————————————————————————————
 # VISTA DASHBOARD
 # ————————————————————————————————————————————————
+if st.session_state.view == "building":
+    st.info("🔄 Generando tu informe… por favor espera.")
+
+    # prepara el source para el agent
+    if st.session_state.user_file:
+        uf   = st.session_state.user_file
+        tmp  = Path("/tmp")/uf.name
+        tmp.write_bytes(uf.read())
+        source = {"type":"local_file","path":str(tmp)}
+    else:
+        source = None
+
+    # ejecuta el agent
+    try:
+        out = agent.run({
+            "prompt":       st.session_state.user_prompt,
+            "source":       source,
+            "project_name": "cafe-quentinas"
+        })
+        url = out.get("deploy_dashboard") or out.get("dashboard_url")
+        st.success(f"✅ Informe listo: [Abrir tablero]({url})")
+        st.session_state.view = "dashboard"
+    except Exception as e:
+        st.error(f"❌ Error al generar el informe: {e}")
+        st.session_state.view = "contact"
+    st.experimental_rerun()
+
+
 if st.session_state.view == "dashboard":
    
     # — Botón para volver a Home —
@@ -232,17 +262,24 @@ if st.session_state.view == "dashboard":
 # VISTA CONTACTO
 # ————————————————————————————————————————————————
 if st.session_state.view == "contact":
-    # botón de volver al Home
     st.button("🏠 Inicio", on_click=go_home)
 
-    st.title("📬 Contáctame")
-    with st.form("contact_form", clear_on_submit=True):
-        nombre  = st.text_input("Nombre")
-        email   = st.text_input("Email")
-        mensaje = st.text_area("Mensaje")
-        enviado = st.form_submit_button("Enviar")
-        if enviado:
-            st.success("¡Gracias! Te contactaré pronto.")
+    st.title("🚀 Solicita tu nuevo informe")
+    with st.form("request_form", clear_on_submit=True):
+        prompt = st.text_area(
+            "Describe el informe que necesitas (ej: 'dashboard financiero para mi Cafetería en Quilmes con datos últimos 12 meses')."
+        )
+        upload = st.file_uploader(
+            "Sube CSV/Excel (opcional)", type=["csv","xlsx"]
+        )
+        submitted = st.form_submit_button("Generar informe")
+    if submitted:
+        st.session_state.user_prompt = prompt
+        st.session_state.user_file   = upload
+        st.session_state.view        = "building"
+        # no st.experimental_rerun() si usas on_click en btns
+        st.experimental_rerun()
+
 
 
 # ─── BLOQUE CSS FINAL (se inyecta al final para que siempre gane) ───
