@@ -137,10 +137,6 @@ st.markdown("---")
 if st.session_state.view == "building":
     st.info("🔄 Generando tu informe… por favor espera.")
 
-    # prepara el source para el agent
-    if st.session_state.view == "building":
-    st.info("🔄 Generando tu informe… por favor, espera.")
-
     # prepara el source
     if st.session_state.user_file:
         uf   = st.session_state.user_file
