@@ -3,7 +3,7 @@ import os, json, subprocess
 import pandas as pd, requests
 from pathlib import Path
 from langchain.agents import initialize_agent, Tool
-from langchain.llms import OpenAI
+from langchain.chat_models import ChatOpenAI
 
 # ── Funciones “tools” para el Agent ─────────────────────────
 
@@ -67,5 +67,8 @@ tools = [
     Tool(name="send_alert", func=send_alert, description="Envía alertas si algo falla.")
 ]
 
-llm = OpenAI(temperature=0)
+llm = ChatOpenAI(
+    model="gpt-3.5-turbo-0613",  # o "gpt-4-0613"/"gpt-4o-mini"
+    temperature=0
+)
 agent = initialize_agent(tools, llm, agent="openai-functions", verbose=False)
