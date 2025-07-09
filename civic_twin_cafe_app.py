@@ -159,7 +159,7 @@ if st.session_state.view == "building":
     except Exception as e:
         st.error(f"❌ Error al generar el informe: {e}")
         st.session_state.view = "contact"
-    st.experimental_rerun()
+    
 
 
 if st.session_state.view == "dashboard":
