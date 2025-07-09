@@ -3,3 +3,12 @@ pandas
 numpy
 matplotlib
 openpyxl
+
+# Para el Agent AI
+langchain>=0.0.280
+openai
+jinja2
+requests
+pandas
+boto3
+sqlalchemy
