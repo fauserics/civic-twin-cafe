@@ -261,8 +261,19 @@ if "view" not in st.session_state:
     st.session_state.view = "home"
 
 # Vista HOME
-# ... (CSS global inyectado más arriba) ...
-
+# ─── CSS para quitar scroll en Home ───────────────────────
+if st.session_state.view == "home":
+    st.markdown(
+        """
+        <style>
+        html, body, [data-testid="stAppViewContainer"] {
+          height: 100vh !important;
+          overflow-y: hidden !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
 # ─── VISTA HOME ───────────────────────────────
 if st.session_state.view == "home":
