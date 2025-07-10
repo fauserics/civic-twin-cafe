@@ -254,7 +254,6 @@ if st.session_state.view == "dashboard":
 # VISTA CONTACTO
 # ————————————————————————————————————————————————
 if st.session_state.view == "contact":
-    # botón de volver al Home
     st.button("🏠 Inicio", on_click=go_home)
 
     st.title("📬 Contáctame")
@@ -263,8 +262,13 @@ if st.session_state.view == "contact":
         email   = st.text_input("Email")
         mensaje = st.text_area("Mensaje")
         enviado = st.form_submit_button("Enviar")
-        if enviado:
-            st.success("¡Gracias! Te contactaré pronto.")
+
+    if enviado:
+        try:
+            send_contact_email(nombre, email, mensaje)
+            st.success("✅ Tu mensaje ha sido enviado, ¡gracias!")
+        except Exception as e:
+            st.error(f"❌ No se pudo enviar el correo: {e}")
 
 
 # ─── BLOQUE CSS FINAL (se inyecta al final para que siempre gane) ───
