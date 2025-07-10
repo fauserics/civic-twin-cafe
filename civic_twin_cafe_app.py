@@ -48,7 +48,7 @@ GLOBAL_CSS = """
 :root {
   --primary: #1F4E79;
   --text: #333333;
-  --bg: #FFFFFF;
+  --bg-hero: rgba(255,255,255,0.85);
   --gap: 32px;
 }
 
