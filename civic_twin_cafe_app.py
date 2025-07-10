@@ -59,16 +59,19 @@ body {
   background-repeat: repeat;
 }
 
-/* HERO */
+/* — Hero semi-transparente para que la textura asome — */
 .hero {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: var(--gap) 0;
-  background: var(--bg);
+  background: var(--bg-hero);
   color: var(--text);
   font-family: 'Montserrat', sans-serif;
+  border-radius: 8px;
+  max-width: 800px;
+  margin: auto;
 }
 
 /* Tagline */
