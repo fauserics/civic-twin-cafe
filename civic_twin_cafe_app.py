@@ -280,13 +280,42 @@ if st.session_state.view == "home":
         <style>
         /* Reduce el margin-top para que la hero suba y desaparezca el scroll */
         div.block-container, section[data-testid="stAppViewContainer"] {
-            margin-top: -120px !important;
+            margin-top: -100px !important;
             padding-top: 0 !important;
         }
         </style>
         """,
         unsafe_allow_html=True
     )
+
+# ── Override para feature‐cards más anchas y bajas ──
+    st.markdown(
+        """
+        <style>
+        /* Ensancha las cards */
+        .feature-card {
+          max-width: 300px !important;   /* antes 240px */
+          padding: 1rem 0.75rem !important; /* antes 1.5rem todo */
+          margin: 0.5rem !important;     /* menos espacio vertical */
+        }
+        /* Texto más compacto */
+        .feature-card h3 {
+          font-size: 1rem !important;    /* antes 1.125rem */
+        }
+        .feature-card p {
+          font-size: 0.85rem !important; /* antes 0.9rem */
+          line-height: 1.2 !important;
+        }
+        /* Reduce gap entre cards */
+        .features {
+          gap: 16px !important;          /* antes var(--gap) */
+          margin-bottom: 0.5rem !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
 # ─── VISTA HOME ───────────────────────────────
 if st.session_state.view == "home":
     # Inyectamos el CSS para overflow:hidden (aunque ya está en GLOBAL_CSS)
