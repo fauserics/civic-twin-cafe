@@ -280,7 +280,7 @@ if st.session_state.view == "home":
         <style>
         /* Reduce el margin-top para que la hero suba y desaparezca el scroll */
         div.block-container, section[data-testid="stAppViewContainer"] {
-            margin-top: -90px !important;
+            margin-top: -120px !important;
             padding-top: 0 !important;
         }
         </style>
