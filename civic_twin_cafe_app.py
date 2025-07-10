@@ -266,38 +266,55 @@ if "view" not in st.session_state:
 
 # ─── VISTA HOME ───────────────────────────────
 if st.session_state.view == "home":
-    # Hero HTML
+    # Hero grande
     st.markdown(
         """
         <div class="hero">
-          <h1>Civic Twin™</h1>
-          <p><strong>AI-Driven Project Experimentation: Genera gemelos digitales y tableros interactivos a demanda.</strong></p>
+          <div class="hero-content">
+            <h1>Civic Twin™</h1>
+            <p><strong>AI-Driven Project Experimentation:</strong><br>
+               Genera gemelos digitales y tableros interactivos a demanda.</p>
+          </div>
         </div>
         """,
         unsafe_allow_html=True
     )
 
-    st.write("")  # espacio bajo el subtítulo
+    # Feature cards explicativas
+    st.markdown(
+        """
+        <div class="features">
+          <div class="feature-card">
+            <!-- Icono de datos -->
+            <svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zm0-8h14V7H7v2z"/></svg>
+            <h3>1. Describe tu informe</h3>
+            <p>Cuenta qué necesitas en lenguaje natural y adjunta tus datos si los tienes.</p>
+          </div>
+          <div class="feature-card">
+            <!-- Icono de IA -->
+            <svg viewBox="0 0 24 24"><path d="M12 2a9.99 9.99 0 0 0-4.75 19.02l.45-2.18c-2.85-.5-5-2.93-5-5.84C2.7 10.4 6.1 7 10.5 7h.5V2z"/></svg>
+            <h3>2. El agente procesa</h3>
+            <p>Un flujo AI busca, prepara y genera tu tablero automáticamente.</p>
+          </div>
+          <div class="feature-card">
+            <!-- Icono de tablero -->
+            <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3V3zm2 2v14h14V5H5zm3 3h8v2H8V8zm0 4h8v2H8v-2z"/></svg>
+            <h3>3. Accede y comparte</h3>
+            <p>Recibe el link a tu dashboard para explorar, ajustar y presentar.</p>
+          </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
-    # Columnas para centrar los botones
-    c1, c2, c3 = st.columns([1, 3, 1])
+    # CTA final: Demo y Contacto centrados
+    st.write("")
+    c1, c2, c3 = st.columns([1, 2, 1])
     with c2:
-        st.button(
-            "▶ Demo",
-            use_container_width=True,
-            on_click=go_dashboard
-        )
-        st.write("")  # separador pequeño
-        st.button(
-            "✉️ Contacto",
-            use_container_width=True,
-            on_click=go_contact
-        )
-
-    # Detenemos aquí para que no renderice lo demás
+        st.button("▶ Demo", use_container_width=True, on_click=go_dashboard)
+        st.write("")
+        st.button("✉️ Contacto", use_container_width=True, on_click=go_contact)
     st.stop()
-
-
 
 
 # ————————————————————————————————————————————————
