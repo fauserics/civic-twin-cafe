@@ -274,7 +274,19 @@ if st.session_state.view == "home":
         """,
         unsafe_allow_html=True
     )
-
+ # ─── Empuja el contenido 50px hacia arriba ─────────────
+    st.markdown(
+        """
+        <style>
+        /* Reduce el margin-top para que la hero suba y desaparezca el scroll */
+        div.block-container, section[data-testid="stAppViewContainer"] {
+            margin-top: -50px !important;
+            padding-top: 0 !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 # ─── VISTA HOME ───────────────────────────────
 if st.session_state.view == "home":
     # Inyectamos el CSS para overflow:hidden (aunque ya está en GLOBAL_CSS)
