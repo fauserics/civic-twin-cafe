@@ -165,6 +165,17 @@ body {
 """
 st.markdown(GLOBAL_CSS, unsafe_allow_html=True)
 
+st.markdown(
+    """
+    <style>
+      /* Fuerza el overlay de azul en la portada */
+      .hero::before {
+        background: rgba(31, 78, 121, 0.6) !important;
+      }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # ────── SVG del logo (dos “círculos abiertos”)
 SVG_LOGO = """
