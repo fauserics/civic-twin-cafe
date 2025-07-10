@@ -4,6 +4,38 @@ import matplotlib.pyplot as plt
 import smtplib
 from email.message import EmailMessage
 
+import streamlit as st
+
+# ─── Set page config ─────────────────────────────────────────────────
+st.set_page_config(
+    page_title="Cafetería Quilmes | Civic Twin™",
+    layout="wide",
+    # opcional: deshabilitar items de ayuda / report
+    menu_items={
+        "Get help": None,
+        "Report a bug": None,
+        "About": None
+    }
+)
+
+# ─── Oculta el menú (hamburguesa) y el footer ─────────────────────────
+st.markdown(
+    """
+    <style>
+      /* Oculta el menú principal (incluye 'View source') */
+      #MainMenu {visibility: hidden;}
+      /* Oculta el footer de Streamlit */
+      footer {visibility: hidden;}
+      /* Opcional: oculta el header que aparece al mover el ratón arriba */
+      header {visibility: hidden;}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# … el resto de tu app …
+
+
 def send_contact_email(nombre: str, email: str, mensaje: str):
     """Envía un email con los datos del formulario."""
     msg = EmailMessage()
