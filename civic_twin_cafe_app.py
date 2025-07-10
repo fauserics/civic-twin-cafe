@@ -52,8 +52,12 @@ GLOBAL_CSS = """
   --gap: 32px;
 }
 
-/* BODY */
-body { background: var(--bg) !important; }
+/* — Textura de fondo — */
+body {
+  background-color: #f7f7f7;
+  background-image: url("https://www.toptal.com/designers/subtlepatterns/grey_wash_wall.png");
+  background-repeat: repeat;
+}
 
 /* HERO */
 .hero {
