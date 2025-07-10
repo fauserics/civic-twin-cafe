@@ -201,24 +201,24 @@ if "view" not in st.session_state:
 
 # Vista HOME
 if st.session_state.view == "home":
-    # — HEADER BLANCO para Home —
     st.markdown("""
-      <div style="text-align:center; padding:80px 0; background:#ffffff;">
-        <img src="https://flagcdn.com/w40/ar.png" width="64" style="margin-bottom:16px;">
-        <h1 style="font-family:Montserrat, sans-serif; color:#333;">Civic Twin™</h1>
-        <h2 style="font-family:Montserrat, sans-serif; color:#333;">AI Driven Project Experimentation</h2>
+      <div class="hero">
+        <!-- Logo y marca -->
+        <img src="https://flagcdn.com/w40/ar.png" width="64" style="margin-bottom:16px;" alt="Logo Civic Twin™">
+        <h1>Civic Twin™</h1>
+        <p>AI-Driven Project Experimentation: Genera gemelos digitales y tableros interactivos a demanda.</p>
+        <!-- Call to Actions -->
+        <div>
+          <a href="#" class="cta-btn" onclick="window.streamlitApi.setComponentValue('dashboard')">▶ Ver demo</a>
+          <a href="#" class="cta-btn" onclick="window.streamlitApi.setComponentValue('contact')">✉️ Contacto</a>
+        </div>
       </div>
-    """, unsafe_allow_html=True)
-   
-    st.title("🚀 Bienvenido a Civic Twin™")
-    st.markdown("Seleccioná una opción:")
-    col1, col2 = st.columns(2, gap="large")
-    col1.button("▶ Tablero Demo", on_click=go_dashboard)
-    col2.button("✉️ Contacto", on_click=go_contact)
+      """, unsafe_allow_html=True)
 
-    st.stop()  # detiene la ejecución para que no siga al tablero ni al form
+    # Detener para que no se muestre nada más
+    return
 
-st.markdown("---")
+
 
 # ————————————————————————————————————————————————
 # VISTA DASHBOARD
