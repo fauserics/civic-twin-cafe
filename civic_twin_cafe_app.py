@@ -1,6 +1,27 @@
 import streamlit as st, pandas as pd, numpy as np
 from pathlib import Path
 import matplotlib.pyplot as plt
+import smtplib
+from email.message import EmailMessage
+
+def send_contact_email(nombre: str, email: str, mensaje: str):
+    """Envía un email con los datos del formulario."""
+    msg = EmailMessage()
+    msg["Subject"] = f"[Civic Twin™] Nuevo mensaje de {nombre}"
+    msg["From"]    = st.secrets["smtp"]["username"]
+    msg["To"]      = st.secrets["smtp"]["to_email"]
+    msg.set_content(f"De: {nombre} <{email}>\n\nMensaje:\n{mensaje}")
+
+    with smtplib.SMTP_SSL(
+        st.secrets["smtp"]["server"],
+        st.secrets["smtp"]["port"]
+    ) as smtp:
+        smtp.login(
+            st.secrets["smtp"]["username"],
+            st.secrets["smtp"]["password"]
+        )
+        smtp.send_message(msg)
+
 
 # ─── helpers de navegación ──────────────────────────────
 def go_home():
