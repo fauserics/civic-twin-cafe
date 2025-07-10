@@ -308,7 +308,33 @@ if st.session_state.view == "home":
     st.markdown(
         """
         <div class="features">
-          <!-- ...tus cards aquí... -->
+          # Feature cards explicativas
+    st.markdown(
+        """
+        <div class="features">
+          <div class="feature-card">
+            <!-- Icono de datos -->
+            <svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zm0-8h14V7H7v2z"/></svg>
+            <h3>1. Describe tu informe</h3>
+            <p>Cuenta qué necesitas en lenguaje natural y adjunta tus datos si los tienes.</p>
+          </div>
+          <div class="feature-card">
+            <!-- Icono de IA -->
+            <svg viewBox="0 0 24 24"><path d="M12 2a9.99 9.99 0 0 0-4.75 19.02l.45-2.18c-2.85-.5-5-2.93-5-5.84C2.7 10.4 6.1 7 10.5 7h.5V2z"/></svg>
+            <h3>2. El agente procesa</h3>
+            <p>Un flujo AI busca, prepara y genera tu tablero automáticamente.</p>
+          </div>
+          <div class="feature-card">
+            <!-- Icono de tablero -->
+            <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3V3zm2 2v14h14V5H5zm3 3h8v2H8V8zm0 4h8v2H8v-2z"/></svg>
+            <h3>3. Accede y comparte</h3>
+            <p>Recibe el link a tu dashboard para explorar, ajustar y presentar.</p>
+          </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
         </div>
         """,
         unsafe_allow_html=True
