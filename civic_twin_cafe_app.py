@@ -94,7 +94,7 @@ body {
 .hero {
   position: relative;
   width: 100%;
-  height: 50vh;
+  height: 35vh;
   background: url("https://images.unsplash.com/photo-1522202195467-52c5a0bfb57c?auto=format&fit=crop&w=1500&q=80") center/cover no-repeat;
   display: flex;
   align-items: center;
