@@ -248,33 +248,7 @@ if st.session_state.view == "home":
 # VISTA DASHBOARD
 # ————————————————————————————————————————————————
 if st.session_state.view == "dashboard":
-   if st.session_state.view == "home":
-    # Hero HTML (sin cambios)
-    st.markdown(
-        """
-        <div class="hero">
-          <h1>Civic Twin™</h1>
-          <p><strong>AI-Driven Project Experimentation: Genera gemelos digitales y tableros interactivos a demanda.</strong></p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    # — Espacio extra bajo el subtítulo —
-    st.write("")
-
-    # — Una fila de 3 columnas, con la del medio 3× más ancha —
-    col1, col2, col3 = st.columns([1, 3, 1])
-
-    with col2:
-        # Botones centrados y largos
-        st.button("▶ Demo", on_click=go_dashboard, use_container_width=True)
-        st.write("")  # separador vertical
-        st.button("✉️ Contacto", on_click=go_contact, use_container_width=True)
-
-    # Cortamos aquí para no renderizar nada más
-    st.stop()
-
+   
     # — Botón para volver a Home —
     st.button("🏠 Inicio", on_click=go_home)
 
@@ -303,7 +277,6 @@ if st.session_state.view == "dashboard":
         unsafe_allow_html=True
     )
 
-   
     # ────── DATOS ───────────────────────────────────────
     BASE = Path(__file__).parent
     CSV, XLSX = BASE/'CivicTwin_Cafe_Quilmes_Data.csv', BASE/'CivicTwin_Cafe_Quilmes_Data.xlsx'
