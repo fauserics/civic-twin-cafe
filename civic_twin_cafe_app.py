@@ -200,23 +200,27 @@ if "view" not in st.session_state:
     st.session_state.view = "home"
 
 # Vista HOME
+# ... (CSS global inyectado más arriba) ...
+
 if st.session_state.view == "home":
+    # Hero HTML
     st.markdown("""
       <div class="hero">
-        <!-- Logo y marca -->
         <img src="https://flagcdn.com/w40/ar.png" width="64" style="margin-bottom:16px;" alt="Logo Civic Twin™">
         <h1>Civic Twin™</h1>
         <p>AI-Driven Project Experimentation: Genera gemelos digitales y tableros interactivos a demanda.</p>
-        <!-- Call to Actions -->
-        <div>
-          <a href="#" class="cta-btn" onclick="window.streamlitApi.setComponentValue('dashboard')">▶ Ver demo</a>
-          <a href="#" class="cta-btn" onclick="window.streamlitApi.setComponentValue('contact')">✉️ Contacto</a>
-        </div>
       </div>
       """, unsafe_allow_html=True)
 
-    # Detener para que no se muestre nada más
-    return
+    # Botones nativos de Streamlit
+    col1, col2 = st.columns(2, gap="large")
+    if col1.button("▶ Ver demo", use_container_width=True, on_click=go_dashboard):
+        pass
+    if col2.button("✉️ Contacto", use_container_width=True, on_click=go_contact):
+        pass
+
+    # Detenemos aquí para que no renderice nada más
+    st.stop()
 
 
 
