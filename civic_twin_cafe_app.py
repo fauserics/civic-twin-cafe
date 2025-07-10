@@ -203,7 +203,7 @@ if "view" not in st.session_state:
 # ... (CSS global inyectado más arriba) ...
 
 if st.session_state.view == "home":
-    # Hero HTML limpio y potente
+    # Hero HTML
     st.markdown(
         """
         <div class="hero">
@@ -214,14 +214,23 @@ if st.session_state.view == "home":
         unsafe_allow_html=True
     )
 
-    # Botones más compactos
-    col1, col2 = st.columns(2, gap="small")
-    if col1.button("▶ Demo", use_container_width=False, on_click=go_dashboard):
-        pass
-    if col2.button("✉️ Contacto", use_container_width=False, on_click=go_contact):
+    # Spacer pequeño
+    st.write("")
+
+    # Primera fila: botón Demo centrado
+    c1, c2, c3 = st.columns([1, 2, 1])
+    if c2.button("▶ Demo", on_click=go_dashboard):
         pass
 
-    # Parar aquí para no renderizar nada más
+    # Un poco de espacio entre botones
+    st.write("")
+
+    # Segunda fila: botón Contacto centrado
+    c1, c2, c3 = st.columns([1, 2, 1])
+    if c2.button("✉️ Contacto", on_click=go_contact):
+        pass
+
+    # Detener renderizado de más
     st.stop()
 
 
