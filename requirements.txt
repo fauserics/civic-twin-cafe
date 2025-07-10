@@ -13,3 +13,4 @@ requests
 pandas
 boto3
 sqlalchemy
+smtplib
