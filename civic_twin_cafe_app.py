@@ -280,7 +280,7 @@ if st.session_state.view == "home":
         <style>
         /* Reduce el margin-top para que la hero suba y desaparezca el scroll */
         div.block-container, section[data-testid="stAppViewContainer"] {
-            margin-top: -70px !important;
+            margin-top: -90px !important;
             padding-top: 0 !important;
         }
         </style>
@@ -309,7 +309,7 @@ if st.session_state.view == "home":
           <div class="hero-content">
             <h1>Civic Twin™</h1>
             <p><strong>AI-Driven Project Experimentation:</strong><br>
-               Genera gemelos digitales y tableros interactivos a demanda.</p>
+               Genera simulaciones y tableros interactivos a demanda.</p>
           </div>
         </div>
         """,
