@@ -34,7 +34,76 @@ def go_contact():
     st.session_state.view = "contact"
 
 
-st.set_page_config(page_title="Cafetería Quilmes | Civic Twin™", layout="wide")
+st.set_page_config(page_title="Cafetería en Quilmes | Civic Twin™", layout="wide")
+
+GLOBAL_CSS = """
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
+
+:root {
+  --primary: #1F4E79;
+  --text: #333333;
+  --bg: #FFFFFF;
+  --gap: 32px;
+}
+
+/* BODY */
+body { background: var(--bg) !important; }
+
+/* HERO */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gap) 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Tagline */
+.hero h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0.5rem 0;
+}
+.hero p {
+  font-size: 1.125rem;
+  font-weight: 300;
+  margin-bottom: var(--gap);
+  max-width: 600px;
+  text-align: center;
+}
+
+/* Botones */
+.cta-btn {
+  background: var(--primary);
+  color: #fff !important;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  text-decoration: none;
+  margin: 0 0.5rem;
+  display: inline-block;
+  transition: background 0.2s ease;
+}
+.cta-btn:hover {
+  background: #14406b;
+}
+
+/* Footer ligero */
+.footer {
+  text-align: center;
+  font-size: 0.875rem;
+  color: #777;
+  padding: var(--gap) 0;
+}
+</style>
+"""
+st.markdown(GLOBAL_CSS, unsafe_allow_html=True)
+
 
 # ────── SVG del logo (dos “círculos abiertos”)
 SVG_LOGO = """
