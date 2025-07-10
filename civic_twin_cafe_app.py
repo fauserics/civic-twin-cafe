@@ -304,11 +304,7 @@ if st.session_state.view == "home":
         unsafe_allow_html=True
     )
 
-    # Feature cards con margen inferior ajustado
-    st.markdown(
-        """
-        <div class="features">
-          # Feature cards explicativas
+   # Feature cards explicativas
     st.markdown(
         """
         <div class="features">
@@ -330,11 +326,6 @@ if st.session_state.view == "home":
             <h3>3. Accede y comparte</h3>
             <p>Recibe el link a tu dashboard para explorar, ajustar y presentar.</p>
           </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
         </div>
         """,
         unsafe_allow_html=True
