@@ -36,6 +36,11 @@ def go_contact():
 
 st.set_page_config(page_title="Cafetería en Quilmes | Civic Twin™", layout="wide")
 
+# Inicializar la vista por defecto
+if "view" not in st.session_state:
+    st.session_state.view = "home"
+
+
 GLOBAL_CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
@@ -202,6 +207,39 @@ if "view" not in st.session_state:
 # Vista HOME
 # ... (CSS global inyectado más arriba) ...
 
+# ─── VISTA HOME ───────────────────────────────
+if st.session_state.view == "home":
+    # Hero (ya debe existir tu CSS global para .hero)
+    st.markdown(
+        """
+        <div class="hero">
+          <h1>Civic Twin™</h1>
+          <p><strong>AI-Driven Project Experimentation: Genera gemelos digitales y tableros interactivos a demanda.</strong></p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # Un pequeño espacio
+    st.write("")
+
+    # Tres columnas: la del medio más ancha para centrar
+    c1, c2, c3 = st.columns([1, 3, 1])
+    with c2:
+        # Demo
+        if st.button("▶ Demo", use_container_width=True):
+            st.session_state.view = "dashboard"
+            st.experimental_rerun()
+
+        st.write("")  # separador vertical
+
+        # Contacto
+        if st.button("✉️ Contacto", use_container_width=True):
+            st.session_state.view = "contact"
+            st.experimental_rerun()
+
+    # Detiene el render de las demás secciones
+    st.stop()
 
 
 # ————————————————————————————————————————————————
