@@ -77,72 +77,89 @@ GLOBAL_CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
 
+/* Variables */
 :root {
   --primary: #1F4E79;
-  --text: #333333;
-  --bg-hero: rgba(255,255,255,0.85);
-  --gap: 32px;
+  --white: #FFFFFF;
+  --dark-overlay: rgba(0, 0, 0, 0.5);
+  --gap: 24px;
 }
 
-/* — Textura de fondo — */
+/* Body con textura ligera */
 body {
-  background-color: #f7f7f7;
-  background-image: url("https://www.toptal.com/designers/subtlepatterns/grey_wash_wall.png");
-  background-repeat: repeat;
+  background: #f7f7f7 url("https://www.toptal.com/designers/subtlepatterns/grey_wash_wall.png") repeat;
 }
 
-/* — Hero semi-transparente para que la textura asome — */
+/* Hero a pantalla completa */
 .hero {
+  position: relative;
+  width: 100%;
+  height: 70vh;
+  background: url("https://images.unsplash.com/photo-1522202195467-52c5a0bfb57c?auto=format&fit=crop&w=1500&q=80") center/cover no-repeat;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--gap) 0;
-  background: var(--bg-hero);
-  color: var(--text);
+  color: var(--white);
+  text-align: center;
   font-family: 'Montserrat', sans-serif;
-  border-radius: 8px;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right:0; bottom:0;
+  background: var(--dark-overlay);
+}
+.hero-content {
+  position: relative;
+  z-index: 1;
   max-width: 800px;
-  margin: auto;
+  padding: 0 var(--gap);
 }
-
-/* Tagline */
-.hero h1 {
-  font-size: 2.5rem;
+.hero-content h1 {
+  font-size: 3.5rem;
+  margin-bottom: 0.5rem;
   font-weight: 700;
-  margin: 0.5rem 0;
 }
-.hero p {
-  font-size: 1.125rem;
+.hero-content p {
+  font-size: 1.25rem;
   font-weight: 300;
   margin-bottom: var(--gap);
-  max-width: 600px;
-  text-align: center;
+  line-height: 1.4;
 }
 
-/* Botones */
-.cta-btn {
-  background: var(--primary);
-  color: #fff !important;
-  font-size: 1rem;
+/* Feature cards */
+.features {
+  display: flex;
+  justify-content: center;
+  gap: var(--gap);
+  margin: var(--gap) 0 2rem;
+  flex-wrap: wrap;
+}
+.feature-card {
+  background: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+  max-width: 240px;
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+}
+.feature-card svg {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 0.75rem;
+  fill: var(--primary);
+}
+.feature-card h3 {
+  margin: 0.5rem 0;
+  font-size: 1.125rem;
   font-weight: 600;
-  padding: 0.75rem 2rem;
-  border-radius: 6px;
-  text-decoration: none;
-  margin: 0 0.5rem;
-  display: inline-block;
-  transition: background 0.2s ease;
 }
-.cta-btn:hover {
-  background: #14406b;
-}
-
-/* Footer ligero */
-.footer {
-  text-align: center;
-  font-size: 0.875rem;
-  color: #777;
-  padding: var(--gap) 0;
+.feature-card p {
+  font-size: 0.9rem;
+  color: #555;
+  font-weight: 300;
+  line-height: 1.3;
 }
 </style>
 """
