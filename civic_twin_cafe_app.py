@@ -203,24 +203,27 @@ if "view" not in st.session_state:
 # ... (CSS global inyectado más arriba) ...
 
 if st.session_state.view == "home":
-    # Hero HTML
-    st.markdown("""
-      <div class="hero">
-        <img src="https://flagcdn.com/w40/ar.png" width="64" style="margin-bottom:16px;" alt="Logo Civic Twin™">
-        <h1>Civic Twin™</h1>
-        <p>AI-Driven Project Experimentation: Genera gemelos digitales y tableros interactivos a demanda.</p>
-      </div>
-      """, unsafe_allow_html=True)
+    # Hero HTML limpio y potente
+    st.markdown(
+        """
+        <div class="hero">
+          <h1>Civic Twin™</h1>
+          <p><strong>AI-Driven Project Experimentation: Genera gemelos digitales y tableros interactivos a demanda.</strong></p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
-    # Botones nativos de Streamlit
-    col1, col2 = st.columns(2, gap="large")
-    if col1.button("▶ Ver demo", use_container_width=True, on_click=go_dashboard):
+    # Botones más compactos
+    col1, col2 = st.columns(2, gap="small")
+    if col1.button("▶ Demo", use_container_width=False, on_click=go_dashboard):
         pass
-    if col2.button("✉️ Contacto", use_container_width=True, on_click=go_contact):
+    if col2.button("✉️ Contacto", use_container_width=False, on_click=go_contact):
         pass
 
-    # Detenemos aquí para que no renderice nada más
+    # Parar aquí para no renderizar nada más
     st.stop()
+
 
 
 
