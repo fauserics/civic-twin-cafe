@@ -209,7 +209,7 @@ if "view" not in st.session_state:
 
 # ─── VISTA HOME ───────────────────────────────
 if st.session_state.view == "home":
-    # Hero (ya debe existir tu CSS global para .hero)
+    # Hero HTML (sin cambios)
     st.markdown(
         """
         <div class="hero">
@@ -220,25 +220,19 @@ if st.session_state.view == "home":
         unsafe_allow_html=True
     )
 
-    # Un pequeño espacio
+    # — Espacio extra bajo el subtítulo —
     st.write("")
 
-    # Tres columnas: la del medio más ancha para centrar
-    c1, c2, c3 = st.columns([1, 3, 1])
-    with c2:
-        # Demo
-        if st.button("▶ Demo", use_container_width=True):
-            st.session_state.view = "dashboard"
-            st.experimental_rerun()
+    # — Una fila de 3 columnas, con la del medio 3× más ancha —
+    col1, col2, col3 = st.columns([1, 3, 1])
 
+    with col2:
+        # Botones centrados y largos
+        st.button("▶ Demo", on_click=go_dashboard, use_container_width=True)
         st.write("")  # separador vertical
+        st.button("✉️ Contacto", on_click=go_contact, use_container_width=True)
 
-        # Contacto
-        if st.button("✉️ Contacto", use_container_width=True):
-            st.session_state.view = "contact"
-            st.experimental_rerun()
-
-    # Detiene el render de las demás secciones
+    # Cortamos aquí para no renderizar nada más
     st.stop()
 
 
