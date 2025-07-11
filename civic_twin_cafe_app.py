@@ -285,6 +285,19 @@ if st.session_state.view == "home":
         """,
         unsafe_allow_html=True
     )
+        st.markdown(
+    """
+    <style>
+      /* Usa el mismo color --azul que el header del dashboard */
+      .hero::before {
+        background-color: var(--azul) !important;
+        opacity: 0.6 !important;      /* ajusta opacidad al gusto */
+      }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
  # ─── Empuja el contenido 50px hacia arriba ─────────────
     st.markdown(
         """
@@ -341,19 +354,6 @@ if st.session_state.view == "home":
         """,
         unsafe_allow_html=True
     )
-
-    st.markdown(
-    """
-    <style>
-      /* Usa el mismo color --azul que el header del dashboard */
-      .hero::before {
-        background-color: var(--azul) !important;
-        opacity: 0.6 !important;      /* ajusta opacidad al gusto */
-      }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 
     # Hero reducido
     st.markdown(
