@@ -176,19 +176,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
- st.markdown(
-    """
-    <style>
-      /* Usa el mismo color --azul que el header del dashboard */
-      .hero::before {
-        background-color: var(--azul) !important;
-        opacity: 0.6 !important;      /* ajusta opacidad al gusto */
-      }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
+ 
 # ────── SVG del logo (dos “círculos abiertos”)
 SVG_LOGO = """
 <svg width="32" height="32" viewBox="0 0 64 64" fill="none"
