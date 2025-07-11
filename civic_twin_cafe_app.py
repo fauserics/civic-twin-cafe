@@ -176,6 +176,18 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+ st.markdown(
+    """
+    <style>
+      /* Usa el mismo color --azul que el header del dashboard */
+      .hero::before {
+        background-color: var(--azul) !important;
+        opacity: 0.6 !important;      /* ajusta opacidad al gusto */
+      }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # ────── SVG del logo (dos “círculos abiertos”)
 SVG_LOGO = """
@@ -198,19 +210,6 @@ HEADER_CSS = """
   --sidebar-w: 300px;
   --azul: #1F4E79;
 }
-
- st.markdown(
-    """
-    <style>
-      /* Usa el mismo color --azul que el header del dashboard */
-      .hero::before {
-        background-color: var(--azul) !important;
-        opacity: 0.6 !important;      /* ajusta opacidad al gusto */
-      }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 
 /* HEADER full-width, debajo de topbar */
 .header-bar{
