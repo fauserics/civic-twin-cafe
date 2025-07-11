@@ -508,7 +508,7 @@ if st.session_state.view == "dashboard":
 if st.session_state.view == "contact":
     st.button("🏠 Inicio", on_click=go_home)
 
-    st.title("📬 Contáctame")
+    st.title("📬 Contacto")
     with st.form("contact_form", clear_on_submit=True):
         nombre  = st.text_input("Nombre")
         email   = st.text_input("Email")
