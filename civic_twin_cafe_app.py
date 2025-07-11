@@ -342,13 +342,26 @@ if st.session_state.view == "home":
         unsafe_allow_html=True
     )
 
+    st.markdown(
+    """
+    <style>
+      /* Usa el mismo color --azul que el header del dashboard */
+      .hero::before {
+        background-color: var(--azul) !important;
+        opacity: 0.6 !important;      /* ajusta opacidad al gusto */
+      }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
     # Hero reducido
     st.markdown(
         """
         <div class="hero">
           <div class="hero-content">
             <h1>Civic Twin™</h1>
-            <p><strong>AI-Driven Project Experimentation</strong><br>
+            <p><strong>AI Driven Project Experimentation</strong><br>
                Genera simulaciones y tableros interactivos a demanda</p>
           </div>
         </div>
