@@ -199,6 +199,19 @@ HEADER_CSS = """
   --azul: #1F4E79;
 }
 
+ st.markdown(
+    """
+    <style>
+      /* Usa el mismo color --azul que el header del dashboard */
+      .hero::before {
+        background-color: var(--azul) !important;
+        opacity: 0.6 !important;      /* ajusta opacidad al gusto */
+      }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 /* HEADER full-width, debajo de topbar */
 .header-bar{
   position:fixed; top:var(--topbar-h); left:0; width:100%; height:var(--header-h);
