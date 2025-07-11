@@ -8,7 +8,7 @@ import streamlit as st
 
 # ─── Set page config ─────────────────────────────────────────────────
 st.set_page_config(
-    page_title="Cafetería Quilmes | Civic Twin™",
+    page_title="Cafetería en Quilmes | Civic Twin™",
     layout="wide",
     # opcional: deshabilitar items de ayuda / report
     menu_items={
@@ -81,7 +81,7 @@ GLOBAL_CSS = """
 :root {
   --primary: #1F4E79;
   --white: #FFFFFF;
-  --dark-overlay: rgba(0, 0, 0, 0.5);
+  --hero-overlay: rgba(31, 78, 121, 0.6);
   --gap: 24px;
 }
 
@@ -107,7 +107,7 @@ body {
   content: "";
   position: absolute;
   top: 0; left: 0; right:0; bottom:0;
-  background: var(--dark-overlay);
+  background: var(--hero-overlay);
 }
 .hero-content {
   position: relative;
@@ -348,8 +348,8 @@ if st.session_state.view == "home":
         <div class="hero">
           <div class="hero-content">
             <h1>Civic Twin™</h1>
-            <p><strong>AI-Driven Project Experimentation:</strong><br>
-               Genera simulaciones y tableros interactivos a demanda.</p>
+            <p><strong>AI-Driven Project Experimentation</strong><br>
+               Genera simulaciones y tableros interactivos a demanda</p>
           </div>
         </div>
         """,
@@ -370,7 +370,7 @@ if st.session_state.view == "home":
             <!-- Icono de IA -->
             <svg viewBox="0 0 24 24"><path d="M12 2a9.99 9.99 0 0 0-4.75 19.02l.45-2.18c-2.85-.5-5-2.93-5-5.84C2.7 10.4 6.1 7 10.5 7h.5V2z"/></svg>
             <h3>2. El agente procesa</h3>
-            <p>Un flujo AI busca, prepara y genera tu tablero automáticamente.</p>
+            <p>Un flujo AI busca, prepara y genera tu tablero.</p>
           </div>
           <div class="feature-card">
             <!-- Icono de tablero -->
