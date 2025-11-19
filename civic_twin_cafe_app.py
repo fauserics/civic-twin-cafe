@@ -709,15 +709,15 @@ Pedido del usuario:
 """
 
             with st.spinner("Generando layout del informe interactivo con OpenAI..."):
-                resp = client.responses.create(
+                resp = client.chat.completions.create(
                     model="gpt-4.1-mini",
-                    input=[
+                    messages=[
                         {"role": "system", "content": system_prompt_priv},
                         {"role": "user", "content": user_prompt_priv},
                     ],
                     response_format={"type": "json_object"},
                 )
-                raw = resp.output[0].content[0].text
+                raw = resp.choices[0].message.content
                 try:
                     layout = json.loads(raw)
                 except Exception as e:
@@ -960,9 +960,9 @@ Debes devolver un JSON con este formato (sin texto adicional fuera del JSON):
       ]
     },
     {
-      "type": "markdown",
-      "title": "Título de la sección",
-      "body": "Texto en Markdown con análisis y recomendaciones."
+          "type": "markdown",
+          "title": "Título de la sección",
+          "body": "Texto en Markdown con análisis y recomendaciones."
     }
   ]
 }
@@ -989,15 +989,15 @@ Pedido del usuario:
 """
 
             with st.spinner("Generando layout del informe interactivo con OpenAI..."):
-                resp = client.responses.create(
+                resp = client.chat.completions.create(
                     model="gpt-4.1-mini",
-                    input=[
+                    messages=[
                         {"role": "system", "content": system_prompt_pub},
                         {"role": "user", "content": user_prompt_pub},
                     ],
                     response_format={"type": "json_object"},
                 )
-                raw = resp.output[0].content[0].text
+                raw = resp.choices[0].message.content
                 try:
                     layout = json.loads(raw)
                 except Exception as e:
