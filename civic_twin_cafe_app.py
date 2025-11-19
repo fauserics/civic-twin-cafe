@@ -1,13 +1,13 @@
-import streamlit as st
-import pandas as pd
-import numpy as np
-from pathlib import Path
-import matplotlib.pyplot as plt
+import os
+import json
 import smtplib
 from email.message import EmailMessage
-import json
+from pathlib import Path
 
-# --- OpenAI ---
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import streamlit as st
 from openai import OpenAI
 
 # ─── Configuración de página ─────────────────────────────────────────
@@ -23,11 +23,46 @@ st.set_page_config(
 
 # ─── Cliente OpenAI ──────────────────────────────────────────────────
 def get_openai_client():
+    """
+    Prioridad de búsqueda de la API key:
+    1) st.secrets["openai"]["api_key"]
+    2) st.secrets["OPENAI_API_KEY"]
+    3) os.environ["OPENAI_API_KEY"]
+    """
+    api_key = None
+
     try:
-        api_key = st.secrets["openai"]["api_key"]
-        return OpenAI(api_key=api_key)
-    except Exception:
+        # 1) Formato por bloques: [openai].api_key
+        if "openai" in st.secrets and isinstance(st.secrets["openai"], dict):
+            if "api_key" in st.secrets["openai"]:
+                api_key = st.secrets["openai"]["api_key"]
+
+        # 2) Clave plana: OPENAI_API_KEY
+        if not api_key and "OPENAI_API_KEY" in st.secrets:
+            api_key = st.secrets["OPENAI_API_KEY"]
+    except Exception as e:
+        st.sidebar.error(f"Error leyendo secrets de Streamlit: {e}")
         return None
+
+    # 3) Fallback: variable de entorno
+    if not api_key:
+        api_key = os.environ.get("OPENAI_API_KEY")
+
+    if not api_key:
+        # Debug seguro: sólo mostramos los nombres de las claves
+        try:
+            keys = list(st.secrets.keys())
+        except Exception:
+            keys = []
+        st.sidebar.warning(f"No se encontró ninguna API key de OpenAI. Claves en secrets: {keys}")
+        return None
+
+    try:
+        return OpenAI(api_key=api_key)
+    except Exception as e:
+        st.sidebar.error(f"No se pudo crear el cliente de OpenAI: {e}")
+        return None
+
 
 client = get_openai_client()
 
@@ -599,7 +634,7 @@ if st.session_state.view == "dashboard_private":
 
     if st.button("🆕 Generar nuevo informe interactivo (privado)"):
         if client is None:
-            st.error("No se pudo inicializar OpenAI. Revisá el bloque [openai] y la clave en secrets.toml.")
+            st.error("No se pudo inicializar OpenAI. Revisá la configuración de OPENAI_API_KEY en secrets o variables de entorno.")
         else:
             context_privado = f"""
 Contexto numérico del proyecto (escenario actual):
@@ -855,7 +890,7 @@ if st.session_state.view == "dashboard_public":
 
     if st.button("🆕 Generar nuevo informe interactivo (público)"):
         if client is None:
-            st.error("No se pudo inicializar OpenAI. Revisá el bloque [openai] y la clave en secrets.toml.")
+            st.error("No se pudo inicializar OpenAI. Revisá la configuración de OPENAI_API_KEY en secrets o variables de entorno.")
         else:
             context_publico = f"""
 Contexto del territorio y simulación:
