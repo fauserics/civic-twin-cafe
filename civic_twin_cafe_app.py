@@ -5,6 +5,10 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import smtplib
 from email.message import EmailMessage
+import json
+
+# --- OpenAI ---
+from openai import OpenAI
 
 # ─── Configuración de página ─────────────────────────────────────────
 st.set_page_config(
@@ -16,6 +20,16 @@ st.set_page_config(
         "About": None
     }
 )
+
+# ─── Cliente OpenAI ──────────────────────────────────────────────────
+def get_openai_client():
+    try:
+        api_key = st.secrets["openai"]["api_key"]
+        return OpenAI(api_key=api_key)
+    except Exception:
+        return None
+
+client = get_openai_client()
 
 # ─── Ocultar menú y footer de Streamlit ──────────────────────────────
 st.markdown(
@@ -48,7 +62,6 @@ def send_contact_email(nombre: str, email: str, mensaje: str):
         )
         smtp.send_message(msg)
 
-
 # ─── Helpers de navegación ───────────────────────────────────────────
 def go_home():
     st.session_state.view = "home"
@@ -65,11 +78,93 @@ def go_public():
 def go_contact():
     st.session_state.view = "contact"
 
-
 # Inicializar la vista por defecto
 if "view" not in st.session_state:
     st.session_state.view = "home"
 
+# ─── Renderizador de informes interactivos ───────────────────────────
+def render_interactive_report(layout: dict, series_data: dict):
+    """
+    layout: dict con estructura:
+    {
+      "title": str,
+      "narrative": str,
+      "sections": [
+        {
+          "type": "kpi_row",
+          "metrics": [{"label":..., "value":..., "suffix":..., "description":...}]
+        },
+        {
+          "type": "line_chart",
+          "title": "...",
+          "series": [{"id": "flujo_24m", "label": "Flujo acumulado"}]
+        },
+        {
+          "type": "markdown",
+          "title": "...",
+          "body": "markdown..."
+        }
+      ]
+    }
+    series_data: { series_id: {"x": [...], "y": [...], "default_label": str} }
+    """
+    title = layout.get("title")
+    narrative = layout.get("narrative")
+    sections = layout.get("sections", [])
+
+    if title:
+        st.markdown(f"#### {title}")
+    if narrative:
+        st.markdown(narrative)
+
+    for sec in sections:
+        st.write("---")
+        sec_type = sec.get("type")
+
+        if sec_type == "kpi_row":
+            metrics = sec.get("metrics", [])
+            cols = st.columns(len(metrics)) if metrics else []
+            for col, m in zip(cols, metrics):
+                with col:
+                    label = m.get("label", "Métrica")
+                    value = m.get("value", "")
+                    suffix = m.get("suffix", "")
+                    desc = m.get("description", None)
+                    display_value = f"{value}{suffix}" if suffix else f"{value}"
+                    col.metric(label, display_value)
+                    if desc:
+                        st.caption(desc)
+
+        elif sec_type == "line_chart":
+            chart_title = sec.get("title", "")
+            series_spec = sec.get("series", [])
+            if not series_spec:
+                continue
+
+            # Tomamos la primera serie para definir eje X
+            first = series_spec[0]
+            sid = first.get("id")
+            if sid not in series_data:
+                continue
+            x = series_data[sid]["x"]
+            data = {}
+            for s in series_spec:
+                sid2 = s.get("id")
+                if sid2 in series_data:
+                    label = s.get("label") or series_data[sid2].get("default_label", sid2)
+                    data[label] = series_data[sid2]["y"]
+
+            df_chart = pd.DataFrame(data, index=x)
+            st.markdown(f"**{chart_title}**")
+            st.line_chart(df_chart)
+
+        elif sec_type == "markdown":
+            md_title = sec.get("title")
+            body = sec.get("body", "")
+            if md_title:
+                st.markdown(f"**{md_title}**")
+            if body:
+                st.markdown(body)
 
 # ─── CSS global (hero, features) ─────────────────────────────────────
 GLOBAL_CSS = """
@@ -360,7 +455,6 @@ if st.session_state.view == "home":
 
     st.stop()
 
-
 # ─────────────────────────────────────────────────────────────────────
 # MENÚ TIPO DE PROYECTO (PRIVADO / PÚBLICO)
 # ─────────────────────────────────────────────────────────────────────
@@ -387,7 +481,6 @@ if st.session_state.view == "mode":
         st.button("Entrar a proyecto público", use_container_width=True, on_click=go_public)
 
     st.stop()
-
 
 # ─────────────────────────────────────────────────────────────────────
 # VISTA DASHBOARD PRIVADO (INVERSOR CAFÉ)
@@ -499,23 +592,120 @@ if st.session_state.view == "dashboard_private":
         unsafe_allow_html=True
     )
 
-    # ────── BLOQUE: Dashboard AI a demanda (stub OpenAI) ──────────
-    st.markdown("### 🧠 Dashboard generado con IA (proyecto privado)")
+    # ─── Series disponibles para el informe AI (privado) ───────────
+    series_data_private = {
+        "flujo_24m": {
+            "x": list(mes),
+            "y": flujo.tolist(),
+            "default_label": "Flujo acumulado"
+        }
+    }
+
+    # ────── BLOQUE: Informe interactivo AI (OpenAI) ────────────────
+    st.markdown("### 🧠 Informe interactivo generado con IA (proyecto privado)")
     st.write(
         "Ingresá un prompt describiendo el informe que querés ver para este proyecto privado. "
-        "En la versión integrada, este texto se enviará a OpenAI para generar un dashboard a medida."
+        "El modelo devolverá un layout interactivo (KPIs, gráficos, texto) basado en el contexto numérico actual."
     )
     prompt_privado = st.text_area(
         "Prompt para OpenAI (proyecto privado)",
-        value="Quiero un dashboard que muestre el punto de equilibrio, el payback y escenarios de estrés para la cafetería."
+        value="Quiero un dashboard que destaque si el proyecto es rentable, muestre el flujo acumulado y recomiende acciones para mejorar la rentabilidad."
     )
-    if st.button("Generar dashboard AI (demo privado)"):
-        # Aquí, en producción, llamarías a la API de OpenAI con el prompt_privado
-        # y renderizarías gráficos/tablas dinámicas. Por ahora, mostramos un placeholder.
-        st.info("🔧 Esta es una demo. Aquí se mostraría el dashboard generado por OpenAI según tu prompt.")
-        st.write("**Prompt enviado (demo):**")
-        st.code(prompt_privado, language="markdown")
 
+    if st.button("Generar informe interactivo (privado)"):
+        if client is None:
+            st.error("No se pudo inicializar OpenAI. Revisá el bloque [openai] y la clave en secrets.toml.")
+        else:
+            context_privado = f"""
+Contexto numérico del proyecto (escenario actual):
+- Clientes por día: {cli}
+- Ticket promedio: {tic:.0f} ARS
+- Días trabajados por mes: {WD}
+- Ventas mensuales: {ventas:.0f} ARS
+- Ganancia mensual: {ganancia:.0f} ARS
+- Costos fijos mensuales: {FIXED:.0f} ARS
+- Inversión inicial: {INV:.0f} ARS
+- Inflación anual asumida: {inf:.1f} %
+- Payback estimado (meses): {"∞" if payback == "∞" else f"{payback:.1f}"}
+
+Series disponibles para gráficos (no inventes otras):
+- ID: "flujo_24m" → Descripción: "Flujo acumulado del proyecto en 24 meses"
+"""
+
+            schema_description = """
+Debes devolver un JSON con este formato (sin texto adicional fuera del JSON):
+
+{
+  "title": "Título del informe",
+  "narrative": "Texto breve en Markdown (2–4 párrafos) resumiendo la situación.",
+  "sections": [
+    {
+      "type": "kpi_row",
+      "metrics": [
+        {
+          "label": "Nombre de la métrica",
+          "value": "texto corto (ej: '$1.200.000')",
+          "suffix": "opcional (ej: ' ARS')",
+          "description": "opcional, breve explicación"
+        }
+      ]
+    },
+    {
+      "type": "line_chart",
+      "title": "Título del gráfico",
+      "series": [
+        {
+          "id": "flujo_24m",
+          "label": "Etiqueta para la leyenda"
+        }
+      ]
+    },
+    {
+      "type": "markdown",
+      "title": "Título de la sección",
+      "body": "Texto en Markdown con explicaciones y recomendaciones."
+    }
+  ]
+}
+
+Reglas:
+- Usá sólo series con IDs definidos en el contexto (por ejemplo "flujo_24m").
+- Podés definir 1–3 secciones de tipo kpi_row, 1–2 line_chart y 1–3 markdown.
+- No agregues comentarios fuera del JSON.
+"""
+
+            system_prompt_priv = (
+                "Sos un analista financiero que diseña dashboards ejecutivos interactivos para inversores "
+                "de pequeños negocios en Argentina. Respondés sólo con JSON siguiendo el esquema indicado."
+            )
+
+            user_prompt_priv = f"""
+{context_privado}
+
+Pedido del usuario:
+\"\"\"{prompt_privado}\"\"\"
+
+{schema_description}
+"""
+
+            with st.spinner("Generando layout del informe interactivo con OpenAI..."):
+                resp = client.responses.create(
+                    model="gpt-4.1-mini",
+                    input=[
+                        {"role": "system", "content": system_prompt_priv},
+                        {"role": "user", "content": user_prompt_priv},
+                    ],
+                    response_format={"type": "json_object"},
+                )
+                raw = resp.output[0].content[0].text
+                try:
+                    layout = json.loads(raw)
+                except Exception as e:
+                    st.error(f"No se pudo parsear el JSON devuelto por el modelo: {e}")
+                    st.code(raw)
+                else:
+                    st.markdown("#### Informe interactivo")
+                    render_interactive_report(layout, series_data_private)
 
 # ─────────────────────────────────────────────────────────────────────
 # VISTA DASHBOARD PÚBLICO (TCS – POLÍTICAS)
@@ -639,22 +829,169 @@ if st.session_state.view == "dashboard_public":
 
     st.caption("Este módulo implementa un modelo dinámico simplificado TCS: S_{t+1} = F(S_t, π_t, ξ_t; θ).")
 
-    # ────── BLOQUE: Dashboard AI a demanda (stub OpenAI) ──────────
-    st.markdown("### 🧠 Dashboard generado con IA (proyecto público)")
+    # ─── Series disponibles para el informe AI (público) ───────────
+    series_data_public = {
+        "E_base": {
+            "x": list(meses),
+            "y": traj_base[:, 0].tolist(),
+            "default_label": "E base"
+        },
+        "E_policy": {
+            "x": list(meses),
+            "y": traj_policy[:, 0].tolist(),
+            "default_label": "E política"
+        },
+        "M_base": {
+            "x": list(meses),
+            "y": traj_base[:, 1].tolist(),
+            "default_label": "M base"
+        },
+        "M_policy": {
+            "x": list(meses),
+            "y": traj_policy[:, 1].tolist(),
+            "default_label": "M política"
+        },
+        "F_base": {
+            "x": list(meses),
+            "y": traj_base[:, 2].tolist(),
+            "default_label": "F base"
+        },
+        "F_policy": {
+            "x": list(meses),
+            "y": traj_policy[:, 2].tolist(),
+            "default_label": "F política"
+        },
+    }
+
+    # ────── BLOQUE: Informe interactivo AI (OpenAI) ────────────────
+    st.markdown("### 🧠 Informe interactivo generado con IA (proyecto público)")
     st.write(
-        "Ingresá un prompt describiendo el informe que querés ver para este proyecto público. "
-        "En la versión integrada, este texto se enviará a OpenAI para generar un dashboard a medida "
-        "sobre E, M, F y las políticas simuladas."
+        "Ingresá un prompt describiendo el tipo de informe o tablero que querés ver para este proyecto público. "
+        "El modelo devolverá un layout (KPIs, gráficos, texto) basado en las trayectorias de E, M y F."
     )
     prompt_publico = st.text_area(
         "Prompt para OpenAI (proyecto público)",
-        value="Quiero un dashboard que compare la política actual con la reforma, mostrando E, M y F con bandas de incertidumbre y una recomendación de política."
+        value="Quiero un dashboard que compare base vs política en E, M y F, identifique trade-offs y recomiende si conviene implementar la política."
     )
-    if st.button("Generar dashboard AI (demo público)"):
-        st.info("🔧 Esta es una demo. Aquí se mostraría el dashboard generado por OpenAI según tu prompt (proyecto público).")
-        st.write("**Prompt enviado (demo):**")
-        st.code(prompt_publico, language="markdown")
 
+    if st.button("Generar informe interactivo (público)"):
+        if client is None:
+            st.error("No se pudo inicializar OpenAI. Revisá el bloque [openai] y la clave en secrets.toml.")
+        else:
+            context_publico = f"""
+Contexto del territorio y simulación:
+
+- Estado inicial:
+  - E₀ (actividad económica): {E0:,.0f}
+  - M₀ (movilidad): {M0:,.1f}
+  - F₀ (recaudación mensual): {F0:,.0f} ARS
+
+- Parámetros de simulación:
+  - Horizonte: {T} meses
+  - Crecimiento base anual de E: {g_base:.1f} %
+  - Inflación anual: {infl_anual:.1f} %
+  - Intensidad de la política: {intensidad:.2f} (0=sin cambio, 1=reforma fuerte)
+
+- Resultados al final del horizonte:
+  - Escenario base:
+    - E_T(base): {traj_base[-1,0]:,.0f}
+    - M_T(base): {traj_base[-1,1]:,.1f}
+    - F_T(base): {traj_base[-1,2]:,.0f} ARS
+    - Welfare base (0.7*E + 0.3*F): {w_base:,.0f}
+  - Escenario con política:
+    - E_T(política): {traj_policy[-1,0]:,.0f}
+    - M_T(política): {traj_policy[-1,1]:,.1f}
+    - F_T(política): {traj_policy[-1,2]:,.0f} ARS
+    - Welfare política (0.7*E + 0.3*F): {w_policy:,.0f}
+
+Series disponibles para gráficos (no inventes otras):
+- "E_base"    → E en escenario base
+- "E_policy"  → E con política
+- "M_base"    → M en escenario base
+- "M_policy"  → M con política
+- "F_base"    → F en escenario base
+- "F_policy"  → F con política
+"""
+
+            schema_description_pub = """
+Debes devolver un JSON con este formato (sin texto adicional fuera del JSON):
+
+{
+  "title": "Título del informe",
+  "narrative": "Texto breve en Markdown (2–4 párrafos) resumiendo la situación.",
+  "sections": [
+    {
+      "type": "kpi_row",
+      "metrics": [
+        {
+          "label": "Nombre de la métrica",
+          "value": "texto corto (ej: 'Alta', 'Media', '$50M')",
+          "suffix": "opcional",
+          "description": "opcional, breve explicación"
+        }
+      ]
+    },
+    {
+      "type": "line_chart",
+      "title": "Título del gráfico",
+      "series": [
+        {
+          "id": "E_base",
+          "label": "E base"
+        },
+        {
+          "id": "E_policy",
+          "label": "E política"
+        }
+      ]
+    },
+    {
+      "type": "markdown",
+      "title": "Título de la sección",
+      "body": "Texto en Markdown con análisis y recomendaciones."
+    }
+  ]
+}
+
+Reglas:
+- Usá sólo series con IDs definidos en el contexto (E_base, E_policy, M_base, M_policy, F_base, F_policy).
+- Podés definir varias secciones de cada tipo, pero no más de 8 secciones en total.
+- No agregues comentarios fuera del JSON.
+"""
+
+            system_prompt_pub = (
+                "Sos un analista de políticas públicas especializado en evaluación de impacto territorial. "
+                "Diseñás dashboards interactivos para gobiernos locales en Argentina. "
+                "Respondés sólo con JSON siguiendo el esquema indicado."
+            )
+
+            user_prompt_pub = f"""
+{context_publico}
+
+Pedido del usuario:
+\"\"\"{prompt_publico}\"\"\"
+
+{schema_description_pub}
+"""
+
+            with st.spinner("Generando layout del informe interactivo con OpenAI..."):
+                resp = client.responses.create(
+                    model="gpt-4.1-mini",
+                    input=[
+                        {"role": "system", "content": system_prompt_pub},
+                        {"role": "user", "content": user_prompt_pub},
+                    ],
+                    response_format={"type": "json_object"},
+                )
+                raw = resp.output[0].content[0].text
+                try:
+                    layout = json.loads(raw)
+                except Exception as e:
+                    st.error(f"No se pudo parsear el JSON devuelto por el modelo: {e}")
+                    st.code(raw)
+                else:
+                    st.markdown("#### Informe interactivo")
+                    render_interactive_report(layout, series_data_public)
 
 # ─────────────────────────────────────────────────────────────────────
 # VISTA CONTACTO
@@ -675,7 +1012,6 @@ if st.session_state.view == "contact":
             st.success("✅ Tu mensaje ha sido enviado, ¡gracias!")
         except Exception as e:
             st.error(f"❌ No se pudo enviar el correo: {e}")
-
 
 # ─── BLOQUE CSS FINAL ───────────────────────────────────────────────
 st.markdown(
