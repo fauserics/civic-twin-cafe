@@ -141,7 +141,6 @@ def render_interactive_report(layout: dict, series_data: dict):
             if not series_spec:
                 continue
 
-            # Tomamos la primera serie para definir eje X
             first = series_spec[0]
             sid = first.get("id")
             if sid not in series_data:
@@ -356,7 +355,6 @@ header_html = (
 
 # ─── HOME ────────────────────────────────────────────────────────────
 if st.session_state.view == "home":
-    # Sin scroll en home
     st.markdown(
         """
         <style>
@@ -369,7 +367,6 @@ if st.session_state.view == "home":
         unsafe_allow_html=True
     )
 
-    # Ajuste de hero
     st.markdown(
         """
         <style>
@@ -382,7 +379,6 @@ if st.session_state.view == "home":
         unsafe_allow_html=True
     )
 
-    # Override feature cards
     st.markdown(
         """
         <style>
@@ -407,7 +403,6 @@ if st.session_state.view == "home":
         unsafe_allow_html=True
     )
 
-    # Hero reducido
     st.markdown(
         """
         <div class="hero">
@@ -421,7 +416,6 @@ if st.session_state.view == "home":
         unsafe_allow_html=True
     )
 
-    # Feature cards
     st.markdown(
         """
         <div class="features">
@@ -445,7 +439,6 @@ if st.session_state.view == "home":
         unsafe_allow_html=True
     )
 
-    # Botones centrados
     st.write("")
     c1, c2, c3 = st.columns([1, 2, 1])
     with c2:
@@ -491,7 +484,6 @@ if st.session_state.view == "dashboard_private":
 
     st.markdown(header_html, unsafe_allow_html=True)
 
-    # Ajuste de márgenes
     st.markdown(
         """
         <style>
@@ -509,7 +501,6 @@ if st.session_state.view == "dashboard_private":
         unsafe_allow_html=True
     )
 
-    # ────── DATOS CAFÉ ─────────────────────────────────────────────
     BASE = Path(__file__).parent
     CSV, XLSX = BASE/'CivicTwin_Cafe_Quilmes_Data.csv', BASE/'CivicTwin_Cafe_Quilmes_Data.xlsx'
 
@@ -538,7 +529,6 @@ if st.session_state.view == "dashboard_private":
     INV      = init.cost_ars.sum()
     FIXED    = month.cost_ars.sum()
 
-    # ────── SIDEBAR controles ─────────────────────────────────────
     st.sidebar.header("Escenario (proyecto privado)")
     cli = st.sidebar.slider(
         "Clientes por día", 30, 200,
@@ -552,7 +542,6 @@ if st.session_state.view == "dashboard_private":
     )
     inf = st.sidebar.number_input("Inflación anual (%)", 0.0, 200.0, 0.0, 1.0)
 
-    # ────── KPI actuales ───────────────────────────────────────────
     ventas   = cli * tic * WD
     insumos  = ventas * INS_PCT
     ganancia = ventas - (insumos + FIXED)
@@ -568,7 +557,6 @@ if st.session_state.view == "dashboard_private":
         delta=NBSP
     )
 
-    # ────── Gráfico flujo acumulado 24 meses ───────────────────────
     mes   = np.arange(1, 25)
     serie = ganancia * (1 + inf/100) ** (mes / 12)
     flujo = np.cumsum(serie) - INV
@@ -582,7 +570,6 @@ if st.session_state.view == "dashboard_private":
     st.pyplot(fig, use_container_width=False)
     st.caption("Datos fuente · Julio 2025 – Civic Twin™")
 
-    # Ocultar delta métricas
     st.markdown(
         """
         <style>
@@ -592,7 +579,6 @@ if st.session_state.view == "dashboard_private":
         unsafe_allow_html=True
     )
 
-    # ─── Series disponibles para el informe AI (privado) ───────────
     series_data_private = {
         "flujo_24m": {
             "x": list(mes),
@@ -601,7 +587,6 @@ if st.session_state.view == "dashboard_private":
         }
     }
 
-    # ────── BLOQUE: Informe interactivo AI (OpenAI) ────────────────
     st.markdown("### 🧠 Informe interactivo generado con IA (proyecto privado)")
     st.write(
         "Ingresá un prompt describiendo el informe que querés ver para este proyecto privado. "
@@ -612,7 +597,7 @@ if st.session_state.view == "dashboard_private":
         value="Quiero un dashboard que destaque si el proyecto es rentable, muestre el flujo acumulado y recomiende acciones para mejorar la rentabilidad."
     )
 
-    if st.button("Generar informe interactivo (privado)"):
+    if st.button("🆕 Generar nuevo informe interactivo (privado)"):
         if client is None:
             st.error("No se pudo inicializar OpenAI. Revisá el bloque [openai] y la clave en secrets.toml.")
         else:
@@ -715,6 +700,19 @@ if st.session_state.view == "dashboard_public":
     st.button("🏠 Inicio", on_click=go_home)
     st.markdown(header_html, unsafe_allow_html=True)
 
+    # Override layout para permitir scroll en sector público
+    st.markdown(
+        """
+        <style>
+        div.block-container{
+            height: auto !important;
+            overflow: visible !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
     st.markdown("### 🏛️ Civic Twin™ · Proyecto público (TCS)")
     st.write(
         "Simulá el efecto de una política pública local (por ejemplo, simplificar habilitaciones de cafés) "
@@ -740,32 +738,21 @@ if st.session_state.view == "dashboard_public":
         g_base = st.slider("Crecimiento base anual de E (%)", -10.0, 20.0, 3.0, 0.5)
         infl_anual = st.slider("Inflación anual (%)", 0.0, 200.0, 100.0, 5.0)
 
-    # Modelo dinámico simplificado TCS
     def F_transition(s_t, policy_intensity, infl, g_base):
-        """
-        s_t = [E_t, M_t, F_t]
-        policy_intensity ∈ [0,1]
-        infl: inflación anual (%)
-        g_base: crecimiento base anual de E (%)
-        """
         E_t, M_t, F_t = s_t
 
-        # Tasas mensuales aproximadas
         g_m = (1 + g_base / 100) ** (1 / 12) - 1
         infl_m = (1 + infl / 100) ** (1 / 12) - 1
 
-        # Política: aumenta tasa de crecimiento de E
         g_eff = g_m + 0.01 * policy_intensity
         E_next = E_t * (1 + g_eff)
 
-        # Movilidad responde a cambios en E
         if E_t > 0:
             growth_E = (E_next / E_t) - 1
         else:
             growth_E = 0.0
         M_next = M_t * (1 + 0.3 * growth_E)
 
-        # Recaudación: inflación + base imponible ligada a E
         base_imponible = E_next * 0.05
         F_next = F_t * (1 + infl_m) + base_imponible * (0.15 + 0.1 * policy_intensity)
 
@@ -781,12 +768,9 @@ if st.session_state.view == "dashboard_public":
     S0 = np.array([E0, M0, F0], dtype=float)
     T = horizonte
 
-    # Escenario base
     traj_base = simulate_trajectory(S0, policy_intensity=0.0, infl=infl_anual, g_base=g_base, T=T)
-    # Escenario con política
     traj_policy = simulate_trajectory(S0, policy_intensity=intensidad, infl=infl_anual, g_base=g_base, T=T)
 
-    # Welfare simple: combinación de E y F al final
     w_base = 0.7 * traj_base[-1, 0] + 0.3 * traj_base[-1, 2]
     w_policy = 0.7 * traj_policy[-1, 0] + 0.3 * traj_policy[-1, 2]
 
@@ -800,7 +784,6 @@ if st.session_state.view == "dashboard_public":
 
     st.markdown("#### Trayectorias de E, M y F")
 
-    # Gráfico E
     figE, axE = plt.subplots(figsize=(10, 2.2))
     axE.plot(meses, traj_base[:, 0], label="E base", linestyle="--")
     axE.plot(meses, traj_policy[:, 0], label="E política", linewidth=2)
@@ -809,7 +792,6 @@ if st.session_state.view == "dashboard_public":
     axE.legend()
     st.pyplot(figE, use_container_width=True)
 
-    # Gráfico M
     figM, axM = plt.subplots(figsize=(10, 2.2))
     axM.plot(meses, traj_base[:, 1], label="M base", linestyle="--")
     axM.plot(meses, traj_policy[:, 1], label="M política", linewidth=2)
@@ -818,7 +800,6 @@ if st.session_state.view == "dashboard_public":
     axM.legend()
     st.pyplot(figM, use_container_width=True)
 
-    # Gráfico F
     figF, axF = plt.subplots(figsize=(10, 2.2))
     axF.plot(meses, traj_base[:, 2], label="F base", linestyle="--")
     axF.plot(meses, traj_policy[:, 2], label="F política", linewidth=2)
@@ -829,7 +810,6 @@ if st.session_state.view == "dashboard_public":
 
     st.caption("Este módulo implementa un modelo dinámico simplificado TCS: S_{t+1} = F(S_t, π_t, ξ_t; θ).")
 
-    # ─── Series disponibles para el informe AI (público) ───────────
     series_data_public = {
         "E_base": {
             "x": list(meses),
@@ -863,7 +843,6 @@ if st.session_state.view == "dashboard_public":
         },
     }
 
-    # ────── BLOQUE: Informe interactivo AI (OpenAI) ────────────────
     st.markdown("### 🧠 Informe interactivo generado con IA (proyecto público)")
     st.write(
         "Ingresá un prompt describiendo el tipo de informe o tablero que querés ver para este proyecto público. "
@@ -874,7 +853,7 @@ if st.session_state.view == "dashboard_public":
         value="Quiero un dashboard que compare base vs política en E, M y F, identifique trade-offs y recomiende si conviene implementar la política."
     )
 
-    if st.button("Generar informe interactivo (público)"):
+    if st.button("🆕 Generar nuevo informe interactivo (público)"):
         if client is None:
             st.error("No se pudo inicializar OpenAI. Revisá el bloque [openai] y la clave en secrets.toml.")
         else:
